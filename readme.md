@@ -71,3 +71,11 @@ path('cards/<int:card_id>/', views.card_detail),
 def card_by_id(request, card_id):
     return HttpResponse(f"Карточка с ID {card_id}")
 ```
+
+### `include` и собственный файл `urls.py` для приложения `cards`
+
+1. Создали еще одно представление `get_all_cards` в файле `views.py`
+2. Создали файл `urls.py` в директории приложения `cards`
+3. Зарегистрировали новый файл `urls.py` в файле `urls.py` конфигурации проекта с помощью функции `include`
+4. Зарегистрировали маршруты без префикса `cards/` в файле `urls.py` приложения `cards`
+5. Удалили маршруты `cards/` из файла `urls.py` конфигурации проекта

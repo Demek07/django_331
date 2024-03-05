@@ -9,3 +9,7 @@ def card_by_id(request, card_id):
     if card_id > 10:
         return HttpResponse("Такой карточки нет!", status=404)
     return HttpResponse(f"Вы открыли карточку {card_id}")  # вернет страничку с надписью "Вы открыли карточку {card_id}" на русском языке.
+
+
+def get_all_cards(request):
+    return HttpResponse("Все карточки")  # вернет страничку с надписью "Все карточки" на русском языке.
