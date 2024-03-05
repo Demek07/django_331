@@ -21,4 +21,5 @@ from cards import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.main),
+    path('cards/<int:card_id>/', views.card_by_id, name='card_detail')
 ]
