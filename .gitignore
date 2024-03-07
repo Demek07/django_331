@@ -1,3 +1,7 @@
 .venv
 .idea
 /db.sqlite3
+.vscode/
+anki/__pycache__/
+cards/__pycache__/
+cards/migrations/__pycache__/

@@ -1,5 +1,6 @@
 # ./cards/views.py
 from django.http import HttpResponse
+from django.shortcuts import render
 
 
 def main(request):
@@ -12,4 +13,9 @@ def card_by_id(request, card_id):
 
 
 def get_all_cards(request):
-    return HttpResponse("Все карточки")  # вернет страничку с надписью "Все карточки" на русском языке.
+    """
+    Возвращает шаблон по адресу templates/cards/catalog.html
+    :param request:
+    :return:
+    """
+    return render(request, 'cards/catalog.html')
