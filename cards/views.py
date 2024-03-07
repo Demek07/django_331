@@ -2,6 +2,12 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 
+info = {
+    "users_count": 100600,
+    "cards_count": 100600,
+    "menu": ["Главная", "О проекте", "Каталог"],
+}
+
 
 def main(request):
     return HttpResponse("Привет, мир!")  # вернет страничку с надписью "Привет, мир!" на русском языке.
@@ -14,8 +20,9 @@ def card_by_id(request, card_id):
 
 def get_all_cards(request):
     """
+    Принимает информацию о проекте (словарь info)
     Возвращает шаблон по адресу templates/cards/catalog.html
     :param request:
     :return:
     """
-    return render(request, 'cards/catalog.html')
+    return render(request, 'cards/catalog.html', context=info)
