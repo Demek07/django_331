@@ -18,14 +18,27 @@ info = {
     ]
 }
 
+"""
+- `catalog` возвращает `HttpResponse("Каталог карточек")`.
+- `get_card_by_id` возвращает `HttpResponse(f"Карточка {card_id}")`.
+- `get_category_by_name` возвращает `HttpResponse(f"Категория {slug}")`.
+"""
+
 
 def main(request):
     return HttpResponse("Привет, мир!")  # вернет страничку с надписью "Привет, мир!" на русском языке.
 
-def card_by_id(request, card_id):
-    if card_id > 10:
-        return HttpResponse("Такой карточки нет!", status=404)
-    return HttpResponse(f"Вы открыли карточку {card_id}")  # вернет страничку с надписью "Вы открыли карточку {card_id}" на русском языке.
+
+def get_card_by_id(request, card_id):
+    return HttpResponse(f"Карточка {card_id}")
+
+
+def catalog(request):
+    return HttpResponse("Каталог карточек")
+
+
+def get_category_by_name(request, slug):
+    return HttpResponse(f"Категория {slug}")
 
 
 def get_all_cards(request):
