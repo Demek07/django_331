@@ -209,4 +209,8 @@ info = {
 **commit: `lesson_51: доделал каталог карточек и детальное отображение карточки по ID`**
 
 ### Собственные шаблонные теги через `simple_tag` и `inclusion_tag`
+- Создали тег шаблона `markdown_to_html` через `simple_tag` в файле `cards/templatetags/markdown_to_html.py`
+- Протестировали его в представлении `card_detail` в шаблоне `card_detail.html`
+
+**commit: `lesson_51: создал собственный тег шаблона markdown_to_html через simple_tag`**
 ### Фильтры в шаблонах
