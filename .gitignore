@@ -5,3 +5,5 @@
 anki/__pycache__/
 cards/__pycache__/
 cards/migrations/__pycache__/
+cards/templatetags/__pycache__/__init__.cpython-312.pyc
+cards/templatetags/__pycache__/markdown_to_html.cpython-312.pyc
