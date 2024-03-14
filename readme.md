@@ -237,4 +237,8 @@ info = {
 
 **commit: `lesson_51: работа с фильтрами в шаблонах`**
 
-и `inclusion_tag`
+### Сделаем второй вариант шаблонного тега `markdown_to_html` через `inclusion_tag`
+- Создали второй вариант шаблонного тега `markdown_to_html` через `inclusion_tag` в файле `cards/templatetags/markdown_to_html.py`
+- Создали шаблон `markdown_to_html.html` в папке `templates/cards`
+- Протестировали его в представлении `card_detail` в шаблоне `card_detail.html`
+- Сравнили работу двух вариантов шаблонного тега
