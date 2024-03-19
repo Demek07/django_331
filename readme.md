@@ -289,3 +289,22 @@ card.delete()
 - Вернуться к конкретной миграции `python manage.py migrate cards 0001_initial`
 
 **commit: `lesson_52: базовые CRUD Операции с моделью Card`**
+
+### Подключение модели `Card` в административной панели
+- Создали файл `admin.py` в приложении `cards` (если его нет)
+- Зарегистрировали модель `Card` в административной панели
+- `settings.py` `LANGUAGE_CODE = 'ru-ru'` - для русского языка в админке
+
+```python
+from django.contrib import admin
+from .models import Card
+
+admin.site.register(Card)
+
+class CardAdmin(admin.ModelAdmin):
+    pass
+```
+
+- создаем суперпользователя `python manage.py createsuperuser`
+
+**commit: `lesson_52: подключил модель Card в административной панели`**
