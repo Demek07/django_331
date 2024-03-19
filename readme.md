@@ -250,3 +250,16 @@ info = {
 Это создало служебные таблицы в базе данных, которые используются для работы с пользователями, сессиями, административной панелью и т.д.
 
 - Создали суперпользователя командой `python manage.py createsuperuser`
+
+### Сделали первую модель `Card` и миграции к ней
+
+**commit: `lesson_52: первая модель cards`**
+
+### Знакомство с `Shell Plus` и работа с моделью `Card` в интерактивной оболочке Django
+- Установка `Shell Plus` командой `pip install django-extensions`
+- Добавление `django_extensions` в `INSTALLED_APPS` в файле `settings.py`
+- Запуск `Shell Plus` командой `python manage.py shell_plus` (для отображения SQL запросов в консоли - `python manage.py shell_plus --print-sql`
+- Для того, чтобы начать работать с моделью `Card` в интерактивной оболочке Django, нужно выполнить команду `python manage.py shell_plus`
+
+
+**commit: `lesson_52: установка Shell Plus и подготовка ORM`**
