@@ -263,3 +263,29 @@ info = {
 
 
 **commit: `lesson_52: установка Shell Plus и подготовка ORM`**
+
+### CRUD Операции с этой моделью
+1. Создание записи
+card = Card(question='Пайтон или Питон?!', answer='Пайтон')
+card.save()
+
+2. Чтение записи
+card = Card.objects.get(pk=1)
+Мы можем добыть любые данные из записи, просто обратившись к атрибутам модели:
+card.question
+card.answer
+card.upload_date
+
+3. Обновление записи
+card = Card.objects.get(pk=1)
+card.question = 'Питон или Пайтон?!!'
+
+4. Удаление записи
+card = Card.objects.get(pk=1)
+card.delete()
+
+5. Как можно откатить миграции?
+- Целиком для приложения `cards` командой `python manage.py migrate cards zero`
+- Вернуться к конкретной миграции `python manage.py migrate cards 0001_initial`
+
+**commit: `lesson_52: базовые CRUD Операции с моделью Card`**
