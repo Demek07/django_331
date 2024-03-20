@@ -1,8 +1,24 @@
-{% extends "base.html" %}
-{% comment %} {% comment %} template/main.html шаблон, расширяющий базовый шаблон base.html {% endcomment %}
+{% extends 'base.html' %}
+{% comment %}
+root/templates/main.html
+
+Расширяет шаблон base.html
+1. Блок title
+2. Блок content
+- Использует переменную user_count для вывода количества пользователей
+3. Блок footer
+{% endcomment %}
+
+
 {% block title %}Главная страница{% endblock %}
+
 {% block content %}
     <h1>Главная страница сайта</h1>
-    <p>Добро пожаловать на наш сайт!</p>
-    <p>На нашем сайте, карточек {{ cards_count }}, пользователей {{ users_count }}.</p>
+    <p>Добро пожаловать на главную страницу сайта!</p>
+    <p>На сайте зарегистрировано {{ users_count }} пользователей.</p>
 {% endblock %}
+
+{% block footer %}
+    <p class="copyright">Это футер из шаблона главной страницы</p>
+{% endblock %}
+
