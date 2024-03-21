@@ -16,7 +16,7 @@ render(запрос, шаблон, контекст=None)
 """
 
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.template.context_processors import request
 from .models import Card
 
@@ -153,17 +153,17 @@ def get_cards_by_tag(request, slug):
 def get_detail_card_by_id(request, card_id):
     """
     Возвращает детальную информацию по карточке для представления
+    Использует функцию get_object_or_404 для обработки ошибки 404
     """
-    # Ищем карточку по id в базе данных
-    card = Card.objects.get(pk=card_id)
+
+    # Добываем карточку из БД через get_object_or_404
+    # если карточки с таким id нет, то вернется 404
+    card = get_object_or_404(Card, pk=card_id)
 
     # Подготавливаем контекст и отображаем шаблон
-    # card.tags = '["Python", "Django", "ORM"]' # Проверили что Django ORM преобразует JSON в список
     context = {
         'card': card,
         'menu': info['menu'],
     }
 
     return render(request, 'cards/card_detail.html', context)
-
-    
