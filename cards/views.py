@@ -14,7 +14,7 @@ render(запрос, шаблон, контекст=None)
     Возвращает объект HttpResponse с отрендеренным шаблоном шаблон и контекстом контекст.
     Если контекст не передан, используется пустой словарь.
 """
-
+from django.db.models import F
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.template.context_processors import request
@@ -159,6 +159,12 @@ def get_detail_card_by_id(request, card_id):
     # Добываем карточку из БД через get_object_or_404
     # если карточки с таким id нет, то вернется 404
     card = get_object_or_404(Card, pk=card_id)
+
+    # Обновляем счетчик просмотров через F object
+    card.views = F('views') + 1
+    card.save()
+
+    card.refresh_from_db()  # Обновляем данные из БД
 
     # Подготавливаем контекст и отображаем шаблон
     context = {
