@@ -299,8 +299,9 @@ card.delete()
 from django.contrib import admin
 from .models import Card
 
-admin.site.register(Card)
+# admin.site.register(Card)
 
+@admin.register(Card)
 class CardAdmin(admin.ModelAdmin):
     pass
 ```
@@ -330,8 +331,8 @@ for card in Card.objects.all():
 ```
 Этот код не вызовет дополнительных запросов к базе данных, так как `all()` 
 возвращает QuerySet, который хранит в себе все объекты модели, которые соответствуют условиям фильтрации.
-2. 
-3. Получили карточку по ID `Card.objects.get(pk=1)`
+
+2. Получили карточку по ID `Card.objects.get(pk=1)`
 3. Получили все карточки с вопросом "Пайтон или Питон?!" `Card.objects.filter(question='Пайтон или Питон?')`
 4. Получили первую карточку с вопросом "Пайтон или Питон?!" `Card.objects.filter(question='Пайтон или Питон?').first()`
 5. Получаем с помощью лукапа `contains` все карточки с вопросом, содержащим слово "или" `Card.objects.filter(question__contains='или')`
@@ -341,3 +342,16 @@ for card in Card.objects.all():
 
 
 **commit: `lesson_52: методы объектного менеджера objects`**
+
+**commit: `hw_30: done`** 
+Загрузил решение ДЗ №30
+
+## Lesson 53
+https://icons.getbootstrap.com/ - иконки для BS5
+Их надо подключить по ссылке в шаблоне `base.html`
+
+### Сделаем чтение из БД в каталоге карточек
+- В файле `views.py` в функции `catalog` изменили возврат словаря на возврат списка карточек из БД
+- В файле-вставке `include/card_preview.html` изменили вставку данных id карточки на `card.id` (что соответствует полю id в БД)
+
+**commit: `lesson_53: сделал чтение из БД в каталоге карточек`**
