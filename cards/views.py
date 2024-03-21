@@ -113,10 +113,35 @@ def about(request):
 
 def catalog(request):
     """Функция для отображения страницы "Каталог"
-    будет возвращать рендер шаблона /templates/cards/catalog.html"""
+    будет возвращать рендер шаблона /templates/cards/catalog.html
 
-    # Получаем ВСЕ карточки для каталога
-    cards = Card.objects.all()
+    - **`sort`** - ключ для указания типа сортировки с возможными значениями: `date`, `views`, `adds`.
+    - **`order`** - опциональный ключ для указания направления сортировки с возможными значениями: `asc`, `desc`. По умолчанию `desc`.
+
+    1. Сортировка по дате добавления в убывающем порядке (по умолчанию): `/cards/catalog/`
+    2. Сортировка по количеству просмотров в убывающем порядке: `/cards/catalog/?sort=views`
+    3. Сортировка по количеству добавлений в возрастающем порядке: `/cards/catalog/?sort=adds&order=asc`
+    4. Сортировка по дате добавления в возрастающем порядке: `/cards/catalog/?sort=date&order=asc`
+
+    """
+
+    # Считываем параметры из GET запроса
+    sort = request.GET.get('sort', 'upload_date')  # по умолчанию сортируем по дате загрузки
+    order = request.GET.get('order', 'desc')  # по умолчанию используем убывающий порядок
+
+    # Сопоставляем параметр сортировки с полями модели
+    valid_sort_fields = {'upload_date', 'views', 'adds'}
+    if sort not in valid_sort_fields:
+        sort = 'upload_date'
+
+    # Обрабатываем порядок сортировки
+    if order == 'asc':
+        order_by = sort
+    else:
+        order_by = f'-{sort}'
+
+    # Получаем отсортированные карточки
+    cards = Card.objects.all().order_by(order_by)
 
     # Подготавливаем контекст и отображаем шаблон
     context = {
@@ -126,6 +151,8 @@ def catalog(request):
     }
 
     return render(request, 'cards/catalog.html', context)
+
+
 
 
 def get_categories(request):
