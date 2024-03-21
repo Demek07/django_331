@@ -361,3 +361,11 @@ https://icons.getbootstrap.com/ - иконки для BS5
 - В файлах `card_detail.html`, `card_preview.html` изменили вставку данных просмотров и добавления в избранное на `card.views` и `card.adds` (что соответствует полям views и adds в БД)
 
 **commit: `lesson_53: сделал детальное отображение карточки из БД по ID`**
+
+### Добавили теги в модель `Card`
+- Добавили поле `tags` в модель `Card`
+- Создали миграцию командой `python manage.py makemigrations`
+- Применили миграцию командой `python manage.py migrate`
+- Подключили модель `Card` в административной панели через декоратор `@admin.register(Card)`
+
+**commit: `lesson_53: добавил теги в модель Card`**

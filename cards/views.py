@@ -158,6 +158,7 @@ def get_detail_card_by_id(request, card_id):
     card = Card.objects.get(pk=card_id)
 
     # Подготавливаем контекст и отображаем шаблон
+    # card.tags = '["Python", "Django", "ORM"]' # Проверили что Django ORM преобразует JSON в список
     context = {
         'card': card,
         'menu': info['menu'],
