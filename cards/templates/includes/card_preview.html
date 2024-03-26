@@ -21,8 +21,9 @@ favorites_count
     <p class="card-text">{{ card.category }}</p>
     <p class="card-text">{{ card.tags|join:" ," }}, всего тегов: {{ card.tags|length }}</p>
 
-    {% for tag in card.tags %}
-            <span class="badge bg-secondary">{{ tag }}</span>
+<!--  Вытягиваем теги из многие ко многим -->
+    {% for tag in card.tags.all %}
+            <span class="badge bg-secondary">{{ tag.name }}</span>
           {% endfor %}
 
           
