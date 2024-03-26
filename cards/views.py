@@ -170,11 +170,21 @@ def get_cards_by_category(request, slug):
     return HttpResponse(f'Cards by category {slug}')
 
 
-def get_cards_by_tag(request, slug):
+def get_cards_by_tag(request, tag_id):
     """
     Возвращает карточки по тегу для представления в каталоге
     """
-    return HttpResponse(f'Cards by tag {slug}')
+    # Добываем карточки из БД по тегу
+    cards = Card.objects.filter(tags__id=tag_id)
+
+    # Подготавливаем контекст и отображаем шаблон
+    context = {
+        'cards': cards,
+        'menu': info['menu'],
+    }
+
+    return render(request, 'cards/catalog.html', context)
+
 
 
 def get_detail_card_by_id(request, card_id):
