@@ -1,4 +1,21 @@
+"""
+Отношения many-to-many.
+Делаем модель тегов.
+Подключаем её вместо JSON поля в модели Card.
+
+"""
 from django.db import models
+
+
+class Tag(models.Model):
+    name = models.CharField(max_length=75, unique=True)
+
+    class Meta:
+        verbose_name = 'Тег'  # имя модели в единственном числе
+        verbose_name_plural = 'Теги'  # имя модели во множественном числе
+
+    def __str__(self):
+        return f'Тег {self.name}'
 
 
 class Card(models.Model):
@@ -7,41 +24,23 @@ class Card(models.Model):
     upload_date = models.DateTimeField(auto_now_add=True, db_column='upload_date')
     views = models.IntegerField(default=0)
     adds = models.IntegerField(default=0)
-    tags = models.JSONField(default=list)
+    tags = models.ManyToManyField(Tag, related_name='cards', blank=True)
 
     class Meta:
-        db_table = 'Cards' # имя таблицы в базе данных
-        verbose_name = 'Карточка' # имя модели в единственном числе
-        verbose_name_plural = 'Карточки' # имя модели во множественном числе
+        db_table = 'Cards'  # имя таблицы в базе данных
+        verbose_name = 'Карточка'  # имя модели в единственном числе
+        verbose_name_plural = 'Карточки'  # имя модели во множественном числе
 
     def __str__(self):
         return f'Карточка {self.question} - {self.answer[:50]}'
 
+
 """
-1. Модель - это класс, который наследуется от models.Model
-2. Поля модели - это атрибуты класса, которые являются экземплярами классов Field
-3. Вложенный класс Meta - это метаданные модели
-4. db_table - это имя таблицы в базе данных
-5. verbose_name - это имя модели в единственном числе
-6. verbose_name_plural - это имя модели во множественном числе
+## Lesson 55
+- Типы отношений в базах данных и их реализация в Django
+- Создали модель `Tag` и связали ее с моделью `Card` через отношение `ManyToManyField`
+- Многие ко многим (ManyToManyField)
 
-### CRUD Операции с этой моделью
-1. Создание записи
-card = Card(question='Пайтон или Питон?!', answer='Пайтон')
-card.save()
-
-2. Чтение записи
-card = Card.objects.get(pk=1)
-Мы можем добыть любые данные из записи, просто обратившись к атрибутам модели:
-card.question
-card.answer
-card.upload_date
-
-3. Обновление записи
-card = Card.objects.get(pk=1)
-card.question = 'Питон или Пайтон?!!'
-
-4. Удаление записи
-card = Card.objects.get(pk=1)
-card.delete()
+### CRUD операции с моделями `Card` и `Tag`
+0. Запустим shell plus командой `python manage.py shell_plus`
 """

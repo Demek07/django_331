@@ -399,9 +399,14 @@ https://icons.getbootstrap.com/ - иконки для BS5
 
 ## Lesson 55
 - Типы отношений в базах данных и их реализация в Django
+- Создали модель `Tag` и связали ее с моделью `Card` через отношение `ManyToManyField`
+- Многие ко многим (ManyToManyField)
+
+
+
 - Один к одному (OneToOneField)
 - Один ко многим (ForeignKey)
-- Многие ко многим (ManyToManyField)
+
 - Примеры использования
 - Отношения и Lookups
 - Отношения и Q-объекты
