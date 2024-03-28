@@ -19,6 +19,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.template.context_processors import request
 from .models import Card
+from django.views.decorators.cache import cache_page
 
 """
 Информация в шаблоны будет браться из базы данных
@@ -111,6 +112,7 @@ def about(request):
     return render(request, 'about.html', info)
 
 
+@cache_page(60 * 15)
 def catalog(request):
     """Функция для отображения страницы "Каталог"
     будет возвращать рендер шаблона /templates/cards/catalog.html
@@ -141,18 +143,19 @@ def catalog(request):
         order_by = f'-{sort}'
 
     # Получаем отсортированные карточки
-    cards = Card.objects.all().order_by(order_by)
+    # cards = Card.objects.all().order_by(order_by)
+
+    # Получаем карточки из БД в ЖАДНОМ режиме
+    cards = Card.objects.prefetch_related('tags').order_by(order_by)
 
     # Подготавливаем контекст и отображаем шаблон
     context = {
         'cards': cards,
-        'cards_count': cards.count(),
+        'cards_count': len(cards),
         'menu': info['menu'],
     }
 
     return render(request, 'cards/catalog.html', context)
-
-
 
 
 def get_categories(request):
@@ -170,11 +173,20 @@ def get_cards_by_category(request, slug):
     return HttpResponse(f'Cards by category {slug}')
 
 
-def get_cards_by_tag(request, slug):
+def get_cards_by_tag(request, tag_id):
     """
     Возвращает карточки по тегу для представления в каталоге
     """
-    return HttpResponse(f'Cards by tag {slug}')
+    # Добываем карточки из БД по тегу
+    cards = Card.objects.filter(tags__id=tag_id)
+
+    # Подготавливаем контекст и отображаем шаблон
+    context = {
+        'cards': cards,
+        'menu': info['menu'],
+    }
+
+    return render(request, 'cards/catalog.html', context)
 
 
 def get_detail_card_by_id(request, card_id):
