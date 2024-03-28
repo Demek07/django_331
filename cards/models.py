@@ -42,5 +42,20 @@ class Card(models.Model):
 - Многие ко многим (ManyToManyField)
 
 ### CRUD операции с моделями `Card` и `Tag`
-0. Запустим shell plus командой `python manage.py shell_plus`
+0. Запустим shell plus с print sql командой `python manage.py shell_plus --print-sql`
+1. Создадим объекты модели `Tag`:
+- `tag1 = Tag.objects.create(name='Python')`
+2. Добавим теги к существующим записям. Просто по ID
+- `card = Card.objects.get(pk=1)`
+- `tag = Tag.objects.get(pk=3)`
+- `card.tags.add(tag)`
+- `card.tags.all()`
+- Добавим тег по имени "java_script", найдем ID и через ADD добавим к карточке
+- `tag = Tag.objects.get(name="java_script")`
+- В один запрос получим карточки по тегу "java_script"
+- `Card.objects.filter(tags__name="java_script")`
+- cards_by_tag = tag.cards.all()
+- Напишем новый запрос, который создаст карточку и добавит к ней теги (существующие по строке тега)
+- `card = Card.objects.create(question='Что такое Django?', answer='Django - фреймворк для веб-разработки на Python')`
+
 """
