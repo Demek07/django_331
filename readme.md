@@ -418,7 +418,7 @@ https://icons.getbootstrap.com/ - иконки для BS5
 - cards_by_tag = tag.cards.all()
 - Напишем новый запрос, который создаст карточку и добавит к ней теги 
 
-# Получаем или создаем теги
+Получаем или создаем теги
 
 Метод `get_or_create` в Django ORM — это удобный способ получить объект из базы данных, 
 если он существует, или создать новый, если он не найден. Он возвращает кортеж, содержащий 
@@ -446,11 +446,31 @@ cards = Card.objects.filter(tags__name__icontains="on")
 **commit: `lesson_55: многие ко многим (ManyToManyField)`**
 
 
+### Один ко многим (ForeignKey)
 
+- Создали модель категорий и добавили данные.
+
+### Один ко многим (ForeignKey)
+
+- Создали модель категорий и добавили данные.
+
+1. Получить объект категории ID 1
+cat1 = Category.objects.get(pk=1)
+2. Получаем все карточки по категории cat1
+cat1.cards.all()
+
+3. Нам приходит на вход карточка и категория, которую мы хотим присвоить карточке.
+Мы не знаем есть такая категория или нет. Попробуем сделать это через get_or_create
+
+new_card = Card.objects.create(question="Какой-то вопрос", answer="Какой-то ответ")
+some_cat = Category.objects.get_or_create(name="Новая категория")[0]
+
+new_card.category = some_cat
+new_card.save()
+
+**commit: `lesson_55: один ко многим (ForeignKey)`**
 
 - Один к одному (OneToOneField)
-- Один ко многим (ForeignKey)
-
 - Примеры использования
 - Отношения и Lookups
 - Отношения и Q-объекты
