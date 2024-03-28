@@ -25,6 +25,7 @@ class Card(models.Model):
     views = models.IntegerField(default=0)
     adds = models.IntegerField(default=0)
     tags = models.ManyToManyField(Tag, related_name='cards', blank=True)
+    category = models.ForeignKey('Category', on_delete=models.CASCADE, related_name='cards', null=True, blank=True, default=None)
 
     class Meta:
         db_table = 'Cards'  # имя таблицы в базе данных
@@ -33,6 +34,18 @@ class Card(models.Model):
 
     def __str__(self):
         return f'Карточка {self.question} - {self.answer[:50]}'
+
+
+# Опишем категории для карточек
+class Category(models.Model):
+    name = models.CharField(max_length=120, unique=True)
+
+    class Meta:
+        verbose_name = 'Категория'  # имя модели в единственном числе
+        verbose_name_plural = 'Категории'  # имя модели во множественном числе
+
+    def __str__(self):
+        return f'Категория {self.name}'
 
 
 """
@@ -55,7 +68,30 @@ class Card(models.Model):
 - В один запрос получим карточки по тегу "java_script"
 - `Card.objects.filter(tags__name="java_script")`
 - cards_by_tag = tag.cards.all()
-- Напишем новый запрос, который создаст карточку и добавит к ней теги (существующие по строке тега)
-- `card = Card.objects.create(question='Что такое Django?', answer='Django - фреймворк для веб-разработки на Python')`
+- Напишем новый запрос, который создаст карточку и добавит к ней теги 
+
+# Получаем или создаем теги
+
+Метод get_or_create в Django ORM — это удобный способ получить объект из базы данных, 
+если он существует, или создать новый, если он не найден. Он возвращает кортеж, содержащий 
+объект и булево значение: первый элемент кортежа — это сам объект, второй — флаг, указывающий,
+ был ли объект создан в результате текущего вызова (True, если объект был создан, и False, 
+ 
+ если объект был получен из базы данных).
+
+tag_names = ["python", "recursion"]
+tags = [Tag.objects.get_or_create(name=name)[0] for name in tag_names]  
+# Используем индекс [0] чтобы получить объект Tag
+
+# Создаем карточку
+new_card = Card(question="Как работает рекурсия в Python?", answer="Рекурсия - это...")
+new_card.save()  # Сохраняем карточку в базу данных
+
+# Добавляем все теги к карточке
+for tag in tags:
+    new_card.tags.add(tag)
+    
+# Получим все карточки, у которых в теге есть "on"
+cards = Card.objects.filter(tags__name__icontains="on")
 
 """

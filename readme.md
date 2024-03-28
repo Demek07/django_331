@@ -402,6 +402,50 @@ https://icons.getbootstrap.com/ - иконки для BS5
 - Создали модель `Tag` и связали ее с моделью `Card` через отношение `ManyToManyField`
 - Многие ко многим (ManyToManyField)
 
+### CRUD операции с моделями `Card` и `Tag`
+0. Запустим shell plus с print sql командой `python manage.py shell_plus --print-sql`
+1. Создадим объекты модели `Tag`:
+- `tag1 = Tag.objects.create(name='Python')`
+2. Добавим теги к существующим записям. Просто по ID
+- `card = Card.objects.get(pk=1)`
+- `tag = Tag.objects.get(pk=3)`
+- `card.tags.add(tag)`
+- `card.tags.all()`
+3. Добавим тег по имени "java_script", найдем ID и через ADD добавим к карточке
+- `tag = Tag.objects.get(name="java_script")`
+4. В один запрос получим карточки по тегу "java_script"
+- `Card.objects.filter(tags__name="java_script")`
+- cards_by_tag = tag.cards.all()
+- Напишем новый запрос, который создаст карточку и добавит к ней теги 
+
+# Получаем или создаем теги
+
+Метод `get_or_create` в Django ORM — это удобный способ получить объект из базы данных, 
+если он существует, или создать новый, если он не найден. Он возвращает кортеж, содержащий 
+объект и булево значение: первый элемент кортежа — это сам объект, второй — флаг, указывающий,
+был ли объект создан в результате текущего вызова (True, если объект был создан, и False, 
+ 
+Если объект был получен из базы данных).
+
+```python
+tag_names = ["python", "recursion"]
+tags = [Tag.objects.get_or_create(name=name)[0] for name in tag_names]  
+# Используем индекс [0] чтобы получить объект Tag
+```
+5. Создаем карточку
+new_card = Card(question="Как работает рекурсия в Python?", answer="Рекурсия - это...")
+new_card.save()  # Сохраняем карточку в базу данных
+
+6. Добавляем все теги к карточке
+for tag in tags:
+    new_card.tags.add(tag)
+    
+7. Получим все карточки, у которых в теге есть "on"
+cards = Card.objects.filter(tags__name__icontains="on")
+
+**commit: `lesson_55: многие ко многим (ManyToManyField)`**
+
+
 
 
 - Один к одному (OneToOneField)
