@@ -470,9 +470,32 @@ new_card.save()
 
 **commit: `lesson_55: один ко многим (ForeignKey)`**
 
-- Один к одному (OneToOneField)
-- Примеры использования
-- Отношения и Lookups
-- Отношения и Q-объекты
-- Отношения и F-объекты?
-- Функции агрегирования и аннотации
+### Агрегирующие функции и аннотации
+
+`Count`, `Sum`, `Avg`, `Max`, `Min`. Метод `values()` 
+
+`count` - количество записей
+`sum` - сумма значений
+`avg` - среднее значение
+`max` - максимальное значение
+`min` - минимальное значение
+
+`values()` - возвращает QuerySet, содержащий словари, представляющие объекты модели.
+
+1. Получим категорию pk=1
+cat1 = Category.objects.get(pk=1)
+2. Посчитаем количество карточек в категории
+cat1.cards.count()
+3. Получим карточку pk=1
+card1 = Card.objects.get(pk=1)
+4. Посчитаем количество карточек для каждой категории. Annotate
+categories_with_counts = Category.objects.annotate(cards_count=Count('cards')).all()
+5. Посчитать сколько тегов у каждой карточки и отсортировать по убыванию
+cards_with_tag_counts = Card.objects.annotate(tags_count=Count('tags')).order_by('-tags_count').all()
+6. Получим карточку с максимальным количеством тегов aggreate
+max_views = Card.objects.aggregate(max_views=Max('views'))
+max_tags_card = Card.objects.aggregate(max_tags=Max('tags'))
+
+
+**commit: `lesson_55: агрегирующие функции и аннотации`**
+

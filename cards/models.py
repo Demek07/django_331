@@ -49,21 +49,29 @@ class Category(models.Model):
 
 
 """
-### Один ко многим (ForeignKey)
+### Агрегирующие функции и аннотации
 
-- Создали модель категорий и добавили данные.
+`Count`, `Sum`, `Avg`, `Max`, `Min`. Метод `values()` 
 
-1. Получить объект категории ID 1
+`count` - количество записей
+`sum` - сумма значений
+`avg` - среднее значение
+`max` - максимальное значение
+`min` - минимальное значение
+
+`values()` - возвращает QuerySet, содержащий словари, представляющие объекты модели.
+
+1. Получим категорию pk=1
 cat1 = Category.objects.get(pk=1)
-2. Получаем все карточки по категории cat1
-cat1.cards.all()
-
-3. Нам приходит на вход карточка и категория, которую мы хотим присвоить карточке.
-Мы не знаем есть такая категория или нет. Попробуем сделать это через get_or_create
-
-new_card = Card.objects.create(question="Какой-то вопрос", answer="Какой-то ответ")
-some_cat = Category.objects.get_or_create(name="Новая категория")[0]
-
-new_card.category = some_cat
-new_card.save()
+2. Посчитаем количество карточек в категории
+cat1.cards.count()
+3. Получим карточку pk=1
+card1 = Card.objects.get(pk=1)
+4. Посчитаем количество карточек для каждой категории. Annotate
+categories_with_counts = Category.objects.annotate(cards_count=Count('cards')).all()
+5. Посчитать сколько тегов у каждой карточки и отсортировать по убыванию
+cards_with_tag_counts = Card.objects.annotate(tags_count=Count('tags')).order_by('-tags_count').all()
+6. Получим карточку с максимальным количеством тегов aggreate
+max_views = Card.objects.aggregate(max_views=Max('views'))
+max_tags_card = Card.objects.aggregate(max_tags=Max('tags'))
 """
