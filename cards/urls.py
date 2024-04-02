@@ -3,6 +3,7 @@ from django.urls import path
 from . import views
 
 # Префикс /cards/
+# Ссылка на детальную информацию о карточке /cards/2/detail/
 urlpatterns = [
     path('catalog/', views.catalog, name='catalog'),  # Общий каталог всех карточек
     path('categories/', views.get_categories, name='categories'),  # Список всех категорий
