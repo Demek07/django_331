@@ -4,7 +4,7 @@ from .models import Card
 @admin.register(Card)
 class CardAdmin(admin.ModelAdmin):
     # Поля, которые будут отображаться в админке
-    list_display = ('id', 'question', 'views', 'upload_date')
+    list_display = ('id', 'question', 'category', 'views', 'upload_date')
     # Поля, которые будут ссылками
     list_display_links = ('id',)
     # Поля по которым будет поиск
