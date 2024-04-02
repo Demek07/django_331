@@ -4,16 +4,16 @@ from .models import Card
 @admin.register(Card)
 class CardAdmin(admin.ModelAdmin):
     # Поля, которые будут отображаться в админке
-    list_display = ('id', 'question', 'category', 'views', 'upload_date')
+    list_display = ('id', 'question', 'category', 'views', 'upload_date', 'status')
     # Поля, которые будут ссылками
     list_display_links = ('id',)
     # Поля по которым будет поиск
     search_fields = ('question', 'answer')
     # Поля по которым будет фильтрация
-    list_filter = ('category', 'upload_date',)
+    list_filter = ('category', 'upload_date', 'status')
     # Ordering - сортировка
     ordering = ('-upload_date',)
     # List_per_page - количество элементов на странице
     list_per_page = 25
     # Поля, которые можно редактировать
-    list_editable = ('views', 'question')
+    list_editable = ('views', 'question', 'status')
