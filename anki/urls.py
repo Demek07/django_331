@@ -7,6 +7,14 @@ from django.urls import path, include
 from anki import settings
 from cards import views
 
+
+# Настраиваем заголовки админ-панели
+admin.site.site_header = "Управление моим сайтом" # Текст в шапке
+admin.site.site_title = "Административный сайт" # Текст в титле
+admin.site.index_title = "Добро пожаловать в панель управления" # Текст на главной странице
+
+
+
 urlpatterns = [
     # Админка
     path('admin/', admin.site.urls),

@@ -2,7 +2,8 @@
 <!-- Использует шаблон cards/templates/cards/include/card_preview.html -->
 {% extends "base.html" %}
 {% block content %}
-<h1>Каталог карточек Anki для интервального повторения</h1>
+<h1 class="mt-2 h1">Каталог карточек</h1>
+
 <p>Здесь вы можете выбрать карточки для изучения</p>
 <p>На текущий момент, у нас карточек: {{cards_count}} и пользователей: {{users_count}} </p>
 {% for card in cards %}
