@@ -1,23 +1,35 @@
 {% extends "admin/change_form.html" %}
 {% load i18n admin_urls static %}
 
-{% block object-tools-items %}
-<li>
-    <a href="{% url 'detail_card_by_id' original.pk %}" class="viewlink" target="_blank">{% trans "Предварительный просмотр" %}</a>
-</li>
-{{ block.super }}
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Колонка для формы редактирования -->
+        <div class="col-12 col-lg-6">
+            {{ block.super }}
+        </div>
+
+        <!-- Колонка для предварительного просмотра -->
+        <div class="col-12 col-lg-6">
+            <div id="preview-container" class="shadow-lg p-3 mb-5 bg-white rounded">
+                <!-- Сюда будет вставлен предварительный просмотр -->
+                ЭТО КОНТЕНТ ПРЕДВАРИТЕЛЬНОГО ПРОСМОТРА
+            </div>
+        </div>
+
+
+    </div>
+</div>
 {% endblock %}
 
-{% block after_field_sets %}
-<!-- Ваш кастомный контейнер для предварительного просмотра -->
-<div id="preview-container">
-    <!-- Контент предварительного просмотра -->
-    ЭТО КОНТЕНТ ПРЕДВАРИТЕЛЬНОГО ПРОСМОТРА
-</div>
-{{ block.super }}
-{% endblock %}
+{% comment %} {% block extrastyle %}
+<!-- Highlight.js Stylesheet -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/styles/tomorrow-night-bright.min.css">
+{% endblock %} {% endcomment %}
 
 {% block extrahead %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/highlight.min.js"></script>
 <script>
 console.log('preview_card_ajax.js');
 // Получение токена CSRF
@@ -68,6 +80,9 @@ function getCookie(name) {
 
             const data = await response.json();
             previewContainer.innerHTML = data.html;
+            console.log(hljs)
+            setTimeout(() => hljs.highlightAll(), 100); // небольшая задержка может помочь
+
         } catch (error) {
             console.error('Failed to fetch preview:', error);
         }
@@ -84,4 +99,5 @@ function getCookie(name) {
 });
 
 </script>
+
 {% endblock %}
