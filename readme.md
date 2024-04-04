@@ -527,3 +527,9 @@ max_tags_card = Card.objects.aggregate(max_tags=Max('tags'))
 - Сделали миграции
 
 **commit: `lesson_56: добавил первичный ключ к таблице многие-ко-многим`**
+
+- Установил `django-djazzmin` и настроил его
+- `pip install django-djazzmin`
+- Добавил `djazzmin` в `INSTALLED_APPS` в файле `settings.py`
+
+**commit: `lesson_56: установил и настроил django-djazzmin`**
