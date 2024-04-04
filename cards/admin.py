@@ -1,6 +1,26 @@
 from django.contrib import admin
 from .models import Card
-# admin.site.register(Card) - альтернативный способ регистрации модели
+from django.contrib.admin import SimpleListFilter
+
+
+
+class CardCodeFilter(SimpleListFilter):
+    title = 'Наличие кода'
+    parameter_name = 'has_code'
+
+    def lookups(self, request, model_admin):
+        return (
+            ('yes', 'Да'),
+            ('no', 'Нет'),
+        )
+
+    def queryset(self, request, queryset):
+        if self.value() == 'yes':
+            return queryset.filter(answer__contains='```')
+        elif self.value() == 'no':
+            return queryset.exclude(answer__contains='```')
+
+
 @admin.register(Card)
 class CardAdmin(admin.ModelAdmin):
     # Поля, которые будут отображаться в админке
@@ -10,7 +30,7 @@ class CardAdmin(admin.ModelAdmin):
     # Поля по которым будет поиск
     search_fields = ('question', 'answer')
     # Поля по которым будет фильтрация
-    list_filter = ('category', 'upload_date', 'status')
+    list_filter = ('category', 'upload_date', 'status', CardCodeFilter)
     # Ordering - сортировка
     ordering = ('-upload_date',)
     # List_per_page - количество элементов на странице
@@ -27,7 +47,7 @@ class CardAdmin(admin.ModelAdmin):
     @admin.action(description="Пометить как не проверенное")
     def set_unchecked(self, request, queryset):
         updated_count = queryset.update(status=Card.Status.UNCHECKED)
-        self.message_user(request, f"{updated_count} записей было помечено как непроверенное")
+        self.message_user(request, f"{updated_count} записей было помечено как непроверенное", 'warning')
 
     # Определение метода для отображения краткой информации о карточке
     @admin.display(description="Наличие кода",

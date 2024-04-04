@@ -513,4 +513,9 @@ max_views = Card.objects.aggregate(max_views=Max('views'))
 max_tags_card = Card.objects.aggregate(max_tags=Max('tags'))
 
 
-**commit: `lesson_55: агрегирующие функции и аннотации`**
+**commit: `lesson_55: кастомизация админки`**
+Двигались по конспекту (до создания собственного фильтра в админке)
+
+
+## Lesson 56
+- Делаем собственный фильтр в админки (Наследование от `SimpleListFilter`)
