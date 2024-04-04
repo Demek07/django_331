@@ -15,7 +15,73 @@
     ЭТО КОНТЕНТ ПРЕДВАРИТЕЛЬНОГО ПРОСМОТРА
 </div>
 {{ block.super }}
+{% endblock %}
+
+{% block extrahead %}
+<script>
+console.log('preview_card_ajax.js');
+// Получение токена CSRF
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+    document.addEventListener('DOMContentLoaded', () => {
 
 
+    const questionInput = document.querySelector('#id_question'); // ID поля вопроса в вашей форме
+    const answerInput = document.querySelector('#id_answer'); // ID поля ответа
+    const previewContainer = document.querySelector('#preview-container'); // Контейнер для вставки предварительного просмотра
+    const csrftoken = getCookie('csrftoken'); // Получение токена CSRF
+    let timeout = null;
 
+    console.log(`csrftoken: ${csrftoken}`)
+
+    const fetchPreview = async () => {
+        const formData = new FormData();
+        formData.append('question', questionInput.value);
+        formData.append('answer', answerInput.value);
+
+        try {
+            console.log('fetching preview...');
+            const response = await fetch('/cards/preview_card_ajax/', { // Укажите правильный URL
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': csrftoken, // csrftoken необходимо определить
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const data = await response.json();
+            previewContainer.innerHTML = data.html;
+        } catch (error) {
+            console.error('Failed to fetch preview:', error);
+        }
+    };
+
+    const debounceFetchPreview = () => {
+        clearTimeout(timeout);
+        console.log('debouncing...');
+        timeout = setTimeout(fetchPreview, 2000);
+    };
+
+    questionInput.addEventListener('input', debounceFetchPreview);
+    answerInput.addEventListener('input', debounceFetchPreview);
+});
+
+</script>
 {% endblock %}
