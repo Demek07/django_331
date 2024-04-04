@@ -39,7 +39,7 @@ class CardAdmin(admin.ModelAdmin):
     list_editable = ('views', 'question', 'status')
     actions = ['set_checked', 'set_unchecked']
     # fields = ('question', 'answer', 'category', 'tags', 'status')
-
+    change_form_template = 'admin/cards/change_form_custom.html'
 
     @admin.action(description="Пометить как проверенное")
     def set_checked(self, request, queryset):

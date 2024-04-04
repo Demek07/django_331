@@ -533,3 +533,8 @@ max_tags_card = Card.objects.aggregate(max_tags=Max('tags'))
 - Добавил `djazzmin` в `INSTALLED_APPS` в файле `settings.py`
 
 **commit: `lesson_56: установил и настроил django-djazzmin`**
+
+- Сделал копию служебного шаблона `change_form.html` и вклинились в `{% block after_field_sets %}`
+- Добавил в админке карточек кнопку "Создать карточку с тегами" `{% block object-tools-items %}`
+
+**commit: `lesson_56: кастомизация шаблона change_form.html`**
