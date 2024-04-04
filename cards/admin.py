@@ -34,10 +34,12 @@ class CardAdmin(admin.ModelAdmin):
     # Ordering - сортировка
     ordering = ('-upload_date',)
     # List_per_page - количество элементов на странице
-    list_per_page = 25
+    list_per_page = 12
     # Поля, которые можно редактировать
     list_editable = ('views', 'question', 'status')
     actions = ['set_checked', 'set_unchecked']
+    # fields = ('question', 'answer', 'category', 'tags', 'status')
+
 
     @admin.action(description="Пометить как проверенное")
     def set_checked(self, request, queryset):
