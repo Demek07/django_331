@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
-{% block content %}
 {% load markdown_to_html %}
-<!-- Детальное представление карточки cards/templates/cards/detail_card.html
- расширяет базовый шаблон base.html -->
+{% block content %}
+<!--cards/templates/cards/card_detail.html-->
+
 <div class="container mt-5">
   <div class="card">
     <div class="card-header">
@@ -11,7 +11,6 @@
     <div class="card-body">
       <h5 class="card-title">{% markdown_to_html card.question %}</h5>
       <p class="card-text">{% markdown_to_html card.answer %}</p>
-      <p class="card-text"><small class="text-muted">Категория: {{ card.category }}</small></p>
       <p class="card-text">
         Теги:
         {% for tag in card.tags.all %}
@@ -19,11 +18,22 @@
         {% endfor %}
       </p>
       <div class="d-flex justify-content-between align-items-center mt-3">
-        <a href="{% url 'catalog' %}" class="btn btn-dark">Вернуться к каталогу</a>
+
+        <!--    ТУТ 2 КНОПКИ. 1 видно на компьютерах, другую на телефонах.    -->
+        <!-- Кнопка для sm и меньше (только иконка стрелки влево) -->
+        <a href="{% url 'catalog' %}" class="btn btn-dark d-block d-md-none">
+            <i class="bi bi-arrow-left"></i>
+        </a>
+
+        <!-- Кнопка для md и больше (полный текст "Вернуться к каталогу") -->
+        <a href="{% url 'catalog' %}" class="btn btn-dark d-none d-md-block">
+            Вернуться к каталогу
+        </a>
+
         <div>
           <i class="bi bi-eye"></i> {{ card.views }}
-          <i class="bi bi-star-fill"></i> {{ card.adds }}
-          <small class="text-muted">Дата загрузки: {{ card.upload_date }}</small>
+          <i class="bi bi-star-fill"></i> {{ card.favorites }}
+          <small class="text-muted d-none d-sm-block">Дата загрузки: {{ card.upload_date }}</small>
         </div>
       </div>
     </div>
