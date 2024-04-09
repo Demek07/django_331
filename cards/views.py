@@ -59,7 +59,7 @@ def about(request):
     return render(request, 'about.html', info)
 
 
-@cache_page(60 * 15)
+# @cache_page(60 * 15)
 def catalog(request):
     """Функция для отображения страницы "Каталог"
     будет возвращать рендер шаблона /templates/cards/catalog.html
@@ -93,7 +93,7 @@ def catalog(request):
     # cards = Card.objects.all().order_by(order_by)
 
     # Получаем карточки из БД в ЖАДНОМ режиме многие ко многим tags
-    cards = Card.objects.prefetch_related('tags').order_by(order_by)
+    cards = Card.objects.select_related('category').prefetch_related('tags').order_by(order_by)
 
     # Подготавливаем контекст и отображаем шаблон
     context = {
