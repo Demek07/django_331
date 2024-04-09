@@ -191,10 +191,20 @@ def add_card(request):
     if request.method == 'POST':
         form = CardForm(request.POST)
         if form.is_valid():
-            # Здесь вы можете обработать валидные данные формы
-            # Например, сохранить их в базе данных или как-то иначе использовать
-            # Пока что мы просто перенаправим на другую страницу
-            return HttpResponseRedirect('/')
+            # Получаем данные из формы
+            question = form.cleaned_data['question']
+            answer = form.cleaned_data['answer']
+            category = form.cleaned_data.get('category', None)
+
+            # Сохраняем карточку в БД
+            card = Card(question=question, answer=answer, category=category)
+            card.save()
+            # Получаем id созданной карточки
+            card_id = card.id
+
+            # Перенаправляем на страницу с детальной информацией о карточке
+            return HttpResponseRedirect(f'/cards/{card_id}/detail/')
+        
     else:
         form = CardForm()
 
