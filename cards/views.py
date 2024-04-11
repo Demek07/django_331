@@ -26,7 +26,7 @@ from django.views.decorators.cache import cache_page
 from .templatetags.markdown_to_html import markdown_to_html
 
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .forms import CardForm
 
 info = {
@@ -59,7 +59,7 @@ def about(request):
     return render(request, 'about.html', info)
 
 
-# @cache_page(60 * 15)
+@cache_page(60 * 15)
 def catalog(request):
     """Функция для отображения страницы "Каталог"
     будет возвращать рендер шаблона /templates/cards/catalog.html
@@ -185,27 +185,13 @@ def preview_card_ajax(request):
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
 
-
-
 def add_card(request):
     if request.method == 'POST':
         form = CardForm(request.POST)
         if form.is_valid():
-            # Получаем данные из формы
-            question = form.cleaned_data['question']
-            answer = form.cleaned_data['answer']
-            category = form.cleaned_data.get('category', None)
-
-            # Сохраняем карточку в БД
-            card = Card(question=question, answer=answer, category=category)
-            card.save()
-            # Получаем id созданной карточки
-            card_id = card.id
-
-            # Перенаправляем на страницу с детальной информацией о карточке
-            return HttpResponseRedirect(f'/cards/{card_id}/detail/')
-        
+            card = form.save()
+            # Редирект на страницу созданной карточки после успешного сохранения
+            return redirect(card.get_absolute_url())
     else:
         form = CardForm()
-
-    return render(request, 'cards/add_card.html', {'form': form, 'menu': info['menu']})
+    return render(request, 'cards/add_card.html', {'form': form})
