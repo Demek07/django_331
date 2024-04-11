@@ -13,5 +13,6 @@ urlpatterns = [
     path('<int:card_id>/detail/', views.get_detail_card_by_id, name='detail_card_by_id'),
     path('preview_card_ajax/', views.preview_card_ajax, name='preview_card_ajax'),
     path('add/', views.add_card, name='add_card'),
-
+    path('add_file/', views.add_card_by_file, name='add_card_by_file')
+ 
 ]

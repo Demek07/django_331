@@ -27,7 +27,9 @@ from .templatetags.markdown_to_html import markdown_to_html
 
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
-from .forms import CardForm
+from .forms import CardForm, UploadFileForm
+
+import os
 
 info = {
     "users_count": 100500,
@@ -195,3 +197,35 @@ def add_card(request):
     else:
         form = CardForm()
     return render(request, 'cards/add_card.html', {'form': form})
+
+
+def handle_uploaded_file(f):
+    # Создаем путь к файлу в директории uploads, имя файла берем из объекта f
+    file_path = f'uploads/{f.name}'
+
+    # Создаем папку uploads, если ее нет
+    os.makedirs(os.path.dirname(file_path), exist_ok=True)
+    
+    
+    # Открываем файл для записи в бинарном режиме (wb+)
+    with open(file_path, "wb+") as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
+
+    return file_path
+
+
+
+def add_card_by_file(request):
+    if request.method == 'POST':
+        
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            # Записываем файл на диск
+            file_path = handle_uploaded_file(request.FILES['file'])
+            
+            # Редирект на страницу каталога после успешного сохранения
+            return redirect('catalog')
+    else:
+        form = UploadFileForm()
+    return render(request, 'cards/add_file_card.html', {'form': form})
