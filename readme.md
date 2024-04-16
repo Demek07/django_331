@@ -616,3 +616,8 @@ max_tags_card = Card.objects.aggregate(max_tags=Max('tags'))
 
 
 **commit: `lesson_60: переписал about и главную страницу на TemplateView`**
+
+- Добавили в AboutView и IndexView атрибут `extra_context` и добавили в него подсчет
+реального количества карточек и пользователей
+
+**commit: `lesson_60: добавил в AboutView и IndexView подсчет реального количества карточек и пользователей`**

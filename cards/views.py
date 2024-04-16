@@ -33,12 +33,11 @@ from django.shortcuts import render, redirect
 from .forms import CardForm, UploadFileForm
 from django.views import View
 from django.views.generic import TemplateView
+from django.contrib.auth import get_user_model
 
 import os
 
 info = {
-    "users_count": 100500,
-    "cards_count": 200600,
     # "menu": ['Главная', 'О проекте', 'Каталог']
     "menu": [
         {"title": "Главная",
@@ -54,18 +53,6 @@ info = {
 }
 
 
-def index(request):
-    """Функция для отображения главной страницы
-    будет возвращать рендер шаблона root/templates/main.html"""
-    return render(request, "main.html", info)
-
-
-def about(request):
-    """Функция для отображения страницы "О проекте"
-    будет возвращать рендер шаблона /root/templates/about.html"""
-    return render(request, 'about.html', info)
-
-
 class MenuMixin:
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -73,18 +60,20 @@ class MenuMixin:
         return context
 
 
-class AboutView(TemplateView):
+class AboutView(MenuMixin, TemplateView):
     template_name = 'about.html'
+    extra_context = {'title': 'О проекте', 
+                                    'cards_count': Card.objects.count(),
+                                    'users_count': get_user_model().objects.count()}
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context.update(info)
-        return context
+
 
 
 class IndexView(MenuMixin, TemplateView):
     template_name = 'main.html'
-    
+    extra_context = {'title': 'Главная',
+                                    'cards_count': Card.objects.count(),
+                                    'users_count': get_user_model().objects.count()}        
 
 
 
