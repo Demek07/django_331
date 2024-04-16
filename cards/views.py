@@ -14,11 +14,13 @@ render(запрос, шаблон, контекст=None)
     Возвращает объект HttpResponse с отрендеренным шаблоном шаблон и контекстом контекст.
     Если контекст не передан, используется пустой словарь.
 """
+from re import search
 from django.db.models import F
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.template.context_processors import request
 from django.template.loader import render_to_string
+from django.db.models import Q
 
 from .models import Card
 from django.views.decorators.cache import cache_page
@@ -61,7 +63,7 @@ def about(request):
     return render(request, 'about.html', info)
 
 
-@cache_page(60 * 15)
+# @cache_page(60 * 15)
 def catalog(request):
     """Функция для отображения страницы "Каталог"
     будет возвращать рендер шаблона /templates/cards/catalog.html
@@ -79,6 +81,8 @@ def catalog(request):
     # Считываем параметры из GET запроса
     sort = request.GET.get('sort', 'upload_date')  # по умолчанию сортируем по дате загрузки
     order = request.GET.get('order', 'desc')  # по умолчанию используем убывающий порядок
+    search_query = request.GET.get('search_query', '')  # поиск по карточкам
+    page_number = None # Заглушка
 
     # Сопоставляем параметр сортировки с полями модели
     valid_sort_fields = {'upload_date', 'views', 'adds'}
@@ -91,11 +95,24 @@ def catalog(request):
     else:
         order_by = f'-{sort}'
 
-    # Получаем отсортированные карточки
-    # cards = Card.objects.all().order_by(order_by)
+    # Если человек ничего не искал
+    if not search_query:
+        # Получаем карточки из БД в ЖАДНОМ режиме многие ко многим tags
+        cards = Card.objects.select_related('category').prefetch_related('tags').order_by(order_by)
 
-    # Получаем карточки из БД в ЖАДНОМ режиме многие ко многим tags
-    cards = Card.objects.select_related('category').prefetch_related('tags').order_by(order_by)
+    # Если человек что-то искал
+    else:
+        # Попробуем это сделать без жадной загрузки select_related и prefetch_related
+        # cards = Card.objects.filter(question__icontains=search_query).order_by(order_by)
+        # Получаем карточки из БД в ЖАДНОМ режиме многие ко многим tags
+        # cards = Card.objects.filter(question__icontains=search_query).select_related('category').prefetch_related('tags').order_by(order_by)
+        # Q объекты и простая загрузка. Вхождение или в вопрос или в ответ
+        # cards = Card.objects.filter(Q(question__icontains=search_query) | Q(answer__icontains=search_query)).order_by(order_by)
+        # Q объекты и простая загрузка. Вхождение или в вопрос или в ответ или в теги
+        # cards = Card.objects.filter(Q(question__icontains=search_query) | Q(answer__icontains=search_query) | Q(tags__name__icontains=search_query)).order_by(order_by)
+        # Это же, с жадной загрузкой
+        cards = Card.objects.filter(Q(question__icontains=search_query) | Q(answer__icontains=search_query) | Q(tags__name__icontains=search_query)).select_related('category').prefetch_related('tags').order_by(order_by).distinct()
+        
 
     # Подготавливаем контекст и отображаем шаблон
     context = {
