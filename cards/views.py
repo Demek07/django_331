@@ -21,6 +21,7 @@ from django.shortcuts import render, get_object_or_404
 from django.template.context_processors import request
 from django.template.loader import render_to_string
 from django.db.models import Q
+from django.core.paginator import Paginator
 
 from .models import Card
 from django.views.decorators.cache import cache_page
@@ -82,7 +83,7 @@ def catalog(request):
     sort = request.GET.get('sort', 'upload_date')  # по умолчанию сортируем по дате загрузки
     order = request.GET.get('order', 'desc')  # по умолчанию используем убывающий порядок
     search_query = request.GET.get('search_query', '')  # поиск по карточкам
-    page_number = None # Заглушка
+    page_number = request.GET.get('page', 1)  # номер страницы
 
     # Сопоставляем параметр сортировки с полями модели
     valid_sort_fields = {'upload_date', 'views', 'adds'}
@@ -113,12 +114,20 @@ def catalog(request):
         # Это же, с жадной загрузкой
         cards = Card.objects.filter(Q(question__icontains=search_query) | Q(answer__icontains=search_query) | Q(tags__name__icontains=search_query)).select_related('category').prefetch_related('tags').order_by(order_by).distinct()
         
+    # Создаем объект пагинатора и передаем ему карточки и количество карточек на странице
+    paginator = Paginator(cards, 25)
+
+    # Получаем объект страницы
+    page_obj = paginator.get_page(page_number)
 
     # Подготавливаем контекст и отображаем шаблон
     context = {
         'cards': cards,
         'cards_count': len(cards),
         'menu': info['menu'],
+        'page_obj': page_obj,
+        "sort": sort, # Передаем, для того чтобы при переходе по страницам сохранялся порядок сортировки
+        "order": order, # Аналогично
     }
 
     response = render(request, 'cards/catalog.html', context)
