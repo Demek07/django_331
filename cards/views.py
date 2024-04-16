@@ -31,6 +31,7 @@ from .templatetags.markdown_to_html import markdown_to_html
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from .forms import CardForm, UploadFileForm
+from django.views import View
 
 import os
 
@@ -217,45 +218,22 @@ def preview_card_ajax(request):
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
 
-def add_card(request):
-    if request.method == 'POST':
+class AddCardView(View):
+    def get(self, request):
+        """
+        Обработчик GET запроса формы добавления карточки
+        """
+        form = CardForm()
+        return render(request, 'cards/add_card.html', {'form': form})
+    
+    def post(self, request):
+        """
+        Обработчик POST запроса формы добавления карточки
+        Если форма валидна, сохраняем карточку и делаем редирект на страницу карточки
+        Иначе возвращаем форму с ошибками
+        """
         form = CardForm(request.POST)
         if form.is_valid():
             card = form.save()
-            # Редирект на страницу созданной карточки после успешного сохранения
             return redirect(card.get_absolute_url())
-    else:
-        form = CardForm()
-    return render(request, 'cards/add_card.html', {'form': form})
-
-
-def handle_uploaded_file(f):
-    # Создаем путь к файлу в директории uploads, имя файла берем из объекта f
-    file_path = f'uploads/{f.name}'
-
-    # Создаем папку uploads, если ее нет
-    os.makedirs(os.path.dirname(file_path), exist_ok=True)
-    
-    
-    # Открываем файл для записи в бинарном режиме (wb+)
-    with open(file_path, "wb+") as destination:
-        for chunk in f.chunks():
-            destination.write(chunk)
-
-    return file_path
-
-
-
-def add_card_by_file(request):
-    if request.method == 'POST':
-        
-        form = UploadFileForm(request.POST, request.FILES)
-        if form.is_valid():
-            # Записываем файл на диск
-            file_path = handle_uploaded_file(request.FILES['file'])
-            
-            # Редирект на страницу каталога после успешного сохранения
-            return redirect('catalog')
-    else:
-        form = UploadFileForm()
-    return render(request, 'cards/add_file_card.html', {'form': form})
+        return render(request, 'cards/add_card.html', {'form': form})
