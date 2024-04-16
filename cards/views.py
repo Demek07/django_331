@@ -32,6 +32,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from .forms import CardForm, UploadFileForm
 from django.views import View
+from django.views.generic import TemplateView
 
 import os
 
@@ -63,6 +64,28 @@ def about(request):
     """Функция для отображения страницы "О проекте"
     будет возвращать рендер шаблона /root/templates/about.html"""
     return render(request, 'about.html', info)
+
+
+class MenuMixin:
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update(info)
+        return context
+
+
+class AboutView(TemplateView):
+    template_name = 'about.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update(info)
+        return context
+
+
+class IndexView(MenuMixin, TemplateView):
+    template_name = 'main.html'
+    
+
 
 
 # @cache_page(60 * 15)

@@ -14,13 +14,12 @@ admin.site.site_title = "Административный сайт" # Текст
 admin.site.index_title = "Добро пожаловать в панель управления" # Текст на главной странице
 
 
-
 urlpatterns = [
     # Админка
     path('admin/', admin.site.urls),
     # Маршруты для меню
-    path('', views.index, name='index'),
-    path('about/', views.about, name='about'),
+    path('', views.AboutView.as_view(), name='index'),
+    path('about/', views.IndexView.as_view(), name='about'),
     # Маршруты подключенные из приложения cards
     path('cards/', include('cards.urls')),
 ]
