@@ -121,7 +121,11 @@ def catalog(request):
         'menu': info['menu'],
     }
 
-    return render(request, 'cards/catalog.html', context)
+    response = render(request, 'cards/catalog.html', context)
+    response['Cache-Control'] = 'no-cache, no-store, must-revalidate'  # - кэш не используется
+    response['Expires'] = '0'  # Перестраховка - устаревание кэша
+    return response
+  
 
 
 def get_categories(request):
