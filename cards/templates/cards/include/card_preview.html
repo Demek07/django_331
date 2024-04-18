@@ -29,12 +29,12 @@
 
         <!--    ТУТ 2 КНОПКИ. 1 видно на компьютерах, другую на телефонах.    -->
           <!-- Кнопка для sm и меньше (только иконка) -->
-<a href="{% url 'detail_card_by_id' card_id=card.pk %}" class="btn btn-dark btn-sm ms-3 d-block d-sm-none">
+<a href="{% url 'detail_card_by_id' pk=card.pk %}" class="btn btn-dark btn-sm ms-3 d-block d-sm-none">
     <i class="bi bi-arrow-right"></i>
 </a>
 
 <!-- Кнопка для sm и больше (полный текст) -->
-<a href="{% url 'detail_card_by_id' card_id=card.pk %}" class="btn btn-dark btn-sm ms-3 d-none d-sm-block">
+<a href="{% url 'detail_card_by_id' pk=card.pk %}" class="btn btn-dark btn-sm ms-3 d-none d-sm-block">
     Подробнее
 </a>
 

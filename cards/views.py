@@ -33,7 +33,7 @@ from django.shortcuts import render, redirect
 from .forms import CardForm, UploadFileForm
 from django.views import View
 from django.views.generic.list import ListView
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, DetailView
 from django.contrib.auth import get_user_model
 
 import os
@@ -154,7 +154,7 @@ def catalog(request):
     return response
   
 
-class CatalogView(ListView):
+class CatalogView(MenuMixin, ListView):
     model = Card  # Указываем модель, данные которой мы хотим отобразить
     template_name = 'cards/catalog.html'  # Путь к шаблону, который будет использоваться для отображения страницы
     context_object_name = 'cards'  # Имя переменной контекста, которую будем использовать в шаблоне
@@ -192,8 +192,6 @@ class CatalogView(ListView):
         context['sort'] = self.request.GET.get('sort', 'upload_date')
         context['order'] = self.request.GET.get('order', 'desc')
         context['search_query'] = self.request.GET.get('search_query', '')
-        # Добавление статических данных в контекст, если это необходимо
-        context['menu'] = info['menu'] # Пример добавления статических данных в контекст
         return context
 
 
@@ -228,31 +226,18 @@ def get_cards_by_tag(request, tag_id):
     return render(request, 'cards/catalog.html', context)
 
 
-def get_detail_card_by_id(request, card_id):
-    """
-    Возвращает детальную информацию по карточке для представления
-    Использует функцию get_object_or_404 для обработки ошибки 404
-    """
+class CardDetailView(MenuMixin, DetailView):
+    model = Card  # Указываем, что моделью для этого представления является Card
+    template_name = 'cards/card_detail.html'  # Указываем путь к шаблону для детального отображения карточки
+    context_object_name = 'card'  # Переопределяем имя переменной в контексте шаблона на 'card'
 
-    # Добываем карточку из БД через get_object_or_404
-    # если карточки с таким id нет, то вернется 404
-    card = get_object_or_404(Card, pk=card_id)
-
-    # Обновляем счетчик просмотров через F object
-    card.views = F('views') + 1
-    card.save()
-
-    card.refresh_from_db()  # Обновляем данные из БД
-
-    # Подготавливаем контекст и отображаем шаблон
-    context = {
-        'card': card,
-        'menu': info['menu'],
-    }
-
-    return render(request, 'cards/card_detail.html', context)
-
-
+    # Метод для обновления счетчика просмотров при каждом отображении детальной страницы карточки
+    def get_object(self, queryset=None):
+        # Получаем объект с учетом переданных в URL параметров (в данном случае, pk или id карточки)
+        obj = super().get_object(queryset=queryset)
+        # Увеличиваем счетчик просмотров на 1 с помощью F-выражения для избежания гонки условий
+        Card.objects.filter(pk=obj.pk).update(views=F('views') + 1)
+        return obj
 
 
 def preview_card_ajax(request):
