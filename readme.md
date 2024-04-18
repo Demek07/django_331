@@ -647,3 +647,9 @@ max_tags_card = Card.objects.aggregate(max_tags=Max('tags'))
 - Использовали `from django.core.cache import cache` для кеширования меню, так как оно делало с каждой страницы по 2 запроса в БД
 
 **commit: `lesson_61: кеширование меню с помощью cache`**
+
+
+### CreateView
+- Переписали представление добавления карточки на классовое представление `CreateView` - `AddCardCreateView(MenuMixin, CreateView)`
+
+**commit: `lesson_61: добавление карточки на классовое представление CreateView`**

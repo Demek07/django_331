@@ -37,7 +37,8 @@ from django.views.generic.list import ListView
 from django.views.generic import TemplateView, DetailView
 from django.contrib.auth import get_user_model
 from django.core.cache import cache
-
+from django.views.generic.edit import CreateView
+from django.urls import reverse_lazy
 import os
 
 info = {
@@ -293,24 +294,10 @@ def preview_card_ajax(request):
 
         return JsonResponse({'html': html_content})
     return JsonResponse({'error': 'Invalid request'}, status=400)
+  
 
-
-class AddCardView(View):
-    def get(self, request):
-        """
-        Обработчик GET запроса формы добавления карточки
-        """
-        form = CardForm()
-        return render(request, 'cards/add_card.html', {'form': form, 'menu': info['menu']})
-    
-    def post(self, request):
-        """
-        Обработчик POST запроса формы добавления карточки
-        Если форма валидна, сохраняем карточку и делаем редирект на страницу карточки
-        Иначе возвращаем форму с ошибками
-        """
-        form = CardForm(request.POST)
-        if form.is_valid():
-            card = form.save()
-            return redirect(card.get_absolute_url())
-        return render(request, 'cards/add_card.html', {'form': form, 'menu': info['menu']})
+class AddCardCreateView(MenuMixin, CreateView):
+    model = Card  # Указываем модель, с которой работает представление
+    form_class = CardForm  # Указываем класс формы для создания карточки
+    template_name = 'cards/add_card.html'  # Указываем шаблон, который будет использоваться для отображения формы
+    success_url = reverse_lazy('catalog')  # URL для перенаправления после успешного создания карточки
