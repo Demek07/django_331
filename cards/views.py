@@ -15,6 +15,7 @@ render(запрос, шаблон, контекст=None)
     Если контекст не передан, используется пустой словарь.
 """
 from re import search
+import time
 from django.db.models import F
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404
@@ -35,6 +36,7 @@ from django.views import View
 from django.views.generic.list import ListView
 from django.views.generic import TemplateView, DetailView
 from django.contrib.auth import get_user_model
+from django.core.cache import cache
 
 import os
 
@@ -55,11 +57,42 @@ info = {
 
 
 class MenuMixin:
+    """
+    Класс-миксин для добавления меню в контекст шаблона
+    Добывает и кеширует cards_count, users_count, menu
+    """
+    timeout = 30
+
+    def get_menu(self):
+        menu = cache.get('menu')
+        if not menu:
+            menu = info['menu']
+            cache.set('menu', menu, timeout=self.timeout)
+
+        return menu
+    
+    def get_cards_count(self):
+        cards_count = cache.get('cards_count')
+        if not cards_count:
+            cards_count = Card.objects.count()
+            cache.set('cards_count', cards_count, timeout=self.timeout)
+
+        return cards_count
+    
+    def get_users_count(self):
+        users_count = cache.get('users_count')
+        if not users_count:
+            users_count = get_user_model().objects.count()
+            cache.set('users_count', users_count, timeout=self.timeout)
+
+        return users_count
+
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['menu'] = info['menu']
-        context['cards_count'] = Card.objects.count()
-        context['users_count'] = get_user_model().objects.count()
+        context['menu'] = self.get_menu()
+        context['cards_count'] = self.get_cards_count()
+        context['users_count'] = self.get_users_count()
         return context
 
 

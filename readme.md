@@ -641,3 +641,9 @@ max_tags_card = Card.objects.aggregate(max_tags=Max('tags'))
 
 
 **commit: `lesson_61: get_detail_card_by_id на классовое представление DetailView`**
+
+
+### Кеширование MenuMixin
+- Использовали `from django.core.cache import cache` для кеширования меню, так как оно делало с каждой страницы по 2 запроса в БД
+
+**commit: `lesson_61: кеширование меню с помощью cache`**
