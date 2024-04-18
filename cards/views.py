@@ -32,6 +32,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from .forms import CardForm, UploadFileForm
 from django.views import View
+from django.views.generic.list import ListView
 from django.views.generic import TemplateView
 from django.contrib.auth import get_user_model
 
@@ -56,24 +57,28 @@ info = {
 class MenuMixin:
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context.update(info)
+        context['menu'] = info['menu']
+        context['cards_count'] = Card.objects.count()
+        context['users_count'] = get_user_model().objects.count()
         return context
 
 
 class AboutView(MenuMixin, TemplateView):
+    """
+    Вьюха для статики. Но можно при желании добавить динамический контент
+    """
     template_name = 'about.html'
-    extra_context = {'title': 'О проекте', 
-                                    'cards_count': Card.objects.count(),
-                                    'users_count': get_user_model().objects.count()}
+    extra_context = {'title': 'О проекте'} # Обновляется только при загрузке Сервера
 
-
+    # def get_context_data(self, **kwargs):
+    #     # Обновляется при каждом запросе
+    #     pass
 
 
 class IndexView(MenuMixin, TemplateView):
     template_name = 'main.html'
-    extra_context = {'title': 'Главная',
-                                    'cards_count': Card.objects.count(),
-                                    'users_count': get_user_model().objects.count()}        
+
+     
 
 
 
@@ -148,6 +153,48 @@ def catalog(request):
     response['Expires'] = '0'  # Перестраховка - устаревание кэша
     return response
   
+
+class CatalogView(ListView):
+    model = Card  # Указываем модель, данные которой мы хотим отобразить
+    template_name = 'cards/catalog.html'  # Путь к шаблону, который будет использоваться для отображения страницы
+    context_object_name = 'cards'  # Имя переменной контекста, которую будем использовать в шаблоне
+    paginate_by = 30  # Количество объектов на странице
+
+    # Метод для модификации начального запроса к БД
+    def get_queryset(self):
+        # Получение параметров сортировки из GET-запроса
+        sort = self.request.GET.get('sort', 'upload_date')
+        order = self.request.GET.get('order', 'desc')
+        search_query = self.request.GET.get('search_query', '')
+
+        # Определение направления сортировки
+        if order == 'asc':
+            order_by = sort
+        else:
+            order_by = f'-{sort}'
+
+        # Фильтрация карточек по поисковому запросу и сортировка
+        if search_query:
+            queryset = Card.objects.filter(
+                Q(question__icontains=search_query) |
+                Q(answer__icontains=search_query) |
+                Q(tags__name__icontains=search_query)
+            ).select_related('category').prefetch_related('tags').order_by(order_by).distinct()
+        else:
+            queryset = Card.objects.select_related('category').prefetch_related('tags').order_by(order_by)
+        return queryset
+
+    # Метод для добавления дополнительного контекста
+    def get_context_data(self, **kwargs):
+        # Получение существующего контекста из базового класса
+        context = super().get_context_data(**kwargs)
+        # Добавление дополнительных данных в контекст
+        context['sort'] = self.request.GET.get('sort', 'upload_date')
+        context['order'] = self.request.GET.get('order', 'desc')
+        context['search_query'] = self.request.GET.get('search_query', '')
+        # Добавление статических данных в контекст, если это необходимо
+        context['menu'] = info['menu'] # Пример добавления статических данных в контекст
+        return context
 
 
 def get_categories(request):
@@ -236,7 +283,7 @@ class AddCardView(View):
         Обработчик GET запроса формы добавления карточки
         """
         form = CardForm()
-        return render(request, 'cards/add_card.html', {'form': form})
+        return render(request, 'cards/add_card.html', {'form': form, 'menu': info['menu']})
     
     def post(self, request):
         """
@@ -248,4 +295,4 @@ class AddCardView(View):
         if form.is_valid():
             card = form.save()
             return redirect(card.get_absolute_url())
-        return render(request, 'cards/add_card.html', {'form': form})
+        return render(request, 'cards/add_card.html', {'form': form, 'menu': info['menu']})
