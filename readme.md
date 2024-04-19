@@ -663,3 +663,10 @@ max_tags_card = Card.objects.aggregate(max_tags=Max('tags'))
 - Шаблон для 404 ошибки (работает пока только в боевом режиме `DEBUG=False`)
 
 **commit: `lesson_62: UpdateView и DeleteView и 404`**
+
+
+### Users app
+- Создали приложение `users` и подключили его в `INSTALLED_APPS`
+- Подготовили маршруты и namespace для приложения `users`
+
+**commit: `lesson_62: users app и подготовка маршрутов`**
