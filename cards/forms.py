@@ -68,10 +68,10 @@ class CardForm(forms.ModelForm):
         super(CardForm, self).__init__(*args, **kwargs)
 
         # Мы проверяем, что self.instance сушествует. Это значит, что форма связана с существующей карточкой
-        if self.instance:
+        # if self.instance:
             # Собираем теги и формируем строку для человеков
             # initial - это словарь, который содержит начальные значения для полей формы
-            self.fields['tags'].initial = ', '.join([tag.name + "ТЭЭЭГ!" for tag in self.instance.tags.all()])
+            # self.fields['tags'].initial = ', '.join([tag.name + "ТЭЭЭГ!" for tag in self.instance.tags.all()])
     # Теперь мы можем определить только те поля, которые нам нужно кастомизировать
     category = forms.ModelChoiceField(queryset=Category.objects.all(), empty_label="Категория не выбрана", label='Категория', widget=forms.Select(attrs={'class': 'form-control'}))
     tags = forms.CharField(label='Теги', required=False, help_text='Перечислите теги через запятую', widget=forms.TextInput(attrs={'class': 'form-control'}), validators=[TagStringValidator()])
