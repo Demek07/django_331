@@ -37,7 +37,7 @@ from django.views.generic.list import ListView
 from django.views.generic import TemplateView, DetailView
 from django.contrib.auth import get_user_model
 from django.core.cache import cache
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 import os
 
@@ -113,7 +113,8 @@ class IndexView(MenuMixin, TemplateView):
     template_name = 'main.html'
 
      
-
+class PageNotFoundView(MenuMixin, TemplateView):
+    template_name = '404.html'
 
 
 # @cache_page(60 * 15)
@@ -301,3 +302,17 @@ class AddCardCreateView(MenuMixin, CreateView):
     form_class = CardForm  # Указываем класс формы для создания карточки
     template_name = 'cards/add_card.html'  # Указываем шаблон, который будет использоваться для отображения формы
     success_url = reverse_lazy('catalog')  # URL для перенаправления после успешного создания карточки
+
+
+class EditCardUpdateView(MenuMixin, UpdateView):
+    model = Card  # Указываем модель, с которой работает представление
+    form_class = CardForm  # Указываем класс формы для редактирования карточки
+    template_name = 'cards/add_card.html'  # Указываем шаблон, который будет использоваться для отображения формы
+    context_object_name = 'card'  # Имя переменной контекста для карточки
+    success_url = reverse_lazy('catalog')  # URL для перенаправления после успешного редактирования карточки
+
+
+class CardDeleteView(DeleteView):
+    model = Card  # Указываем модель, с которой работает представление
+    success_url = reverse_lazy('catalog')  # URL для перенаправления после успешного удаления карточки
+    template_name = 'cards/delete_card.html'  # Указываем шаблон, который будет использоваться для отображения формы подтверждения удаления

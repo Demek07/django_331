@@ -14,6 +14,8 @@ admin.site.site_title = "Административный сайт" # Текст
 admin.site.index_title = "Добро пожаловать в панель управления" # Текст на главной странице
 
 
+
+
 urlpatterns = [
     # Админка
     path('admin/', admin.site.urls),
@@ -31,3 +33,7 @@ if settings.DEBUG:
                       path('__debug__/', include(debug_toolbar.urls)),
                       # другие URL-паттерны
                   ] + urlpatterns
+    
+
+# Определяем кастомный обработчик 404 ошибки
+handler404 = views.PageNotFoundView.as_view()

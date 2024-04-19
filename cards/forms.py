@@ -63,6 +63,15 @@ class TagStringValidator:
 
 
 class CardForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(CardForm, self).__init__(*args, **kwargs)
+
+        # Мы проверяем, что self.instance сушествует. Это значит, что форма связана с существующей карточкой
+        if self.instance:
+            # Собираем теги и формируем строку для человеков
+            # initial - это словарь, который содержит начальные значения для полей формы
+            self.fields['tags'].initial = ', '.join([tag.name + "ТЭЭЭГ!" for tag in self.instance.tags.all()])
     # Теперь мы можем определить только те поля, которые нам нужно кастомизировать
     category = forms.ModelChoiceField(queryset=Category.objects.all(), empty_label="Категория не выбрана", label='Категория', widget=forms.Select(attrs={'class': 'form-control'}))
     tags = forms.CharField(label='Теги', required=False, help_text='Перечислите теги через запятую', widget=forms.TextInput(attrs={'class': 'form-control'}), validators=[TagStringValidator()])
@@ -95,18 +104,25 @@ class CardForm(forms.ModelForm):
         instance = super().save(commit=False)
         # Сохраняем карточку в базу данных, чтобы у нее появился id
         # Без id мы не сможем добавить теги
-        instance.save() 
+        instance.save()
 
-        # Обрабатываем теги
-        for tag_name in self.cleaned_data['tags']:
+        # Новый функционал для редактирования карточки (старые теги и новые теги)
+        current_tags = set(self.cleaned_data['tags'])
+        existing_tags = set(tag.name for tag in instance.tags.all())
+
+        # Удаляем теги, которые были удалены из формы
+        for tag in instance.tags.all():
+            if tag.name not in current_tags:
+                instance.tags.remove(tag)
+
+        # Добавляем новые теги
+        for tag_name in current_tags:
             tag, created = Tag.objects.get_or_create(name=tag_name)
-            # На каждой итерации пополняется таблица много-ко-многим
             instance.tags.add(tag)
-        
-        
+
         return instance
-    
 
 class UploadFileForm(forms.Form):
     # Здесь определяется поле для загрузки файла
     file = forms.FileField(label='Выберите файл', widget=forms.FileInput(attrs={'class': 'form-control'}))
+
