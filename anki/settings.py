@@ -137,3 +137,5 @@ CACHES = {
         'LOCATION': 'unique-snowflake',
     }
 }
+
+LOGIN_URL = 'users:login'

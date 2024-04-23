@@ -297,15 +297,14 @@ def preview_card_ajax(request):
     return JsonResponse({'error': 'Invalid request'}, status=400)
   
 
-class AddCardCreateView(LoginRequiredMixin, MenuMixin, CreateView):
+class AddCardCreateView(MenuMixin, LoginRequiredMixin,  CreateView):
     model = Card  # Указываем модель, с которой работает представление
     form_class = CardForm  # Указываем класс формы для создания карточки
     template_name = 'cards/add_card.html'  # Указываем шаблон, который будет использоваться для отображения формы
     success_url = reverse_lazy('catalog')  # URL для перенаправления после успешного создания карточки
-    login_url = reverse_lazy('users:login') # указываем  URL для входа в систему, который будет использоваться для перенаправления пользователя на страницу аутентификации.
     redirect_field_name = 'next'  # имя параметра запроса, в котором хранится URL-адрес, на который пользователь должен быть перенаправлен после успешного входа в систему.
 
-class EditCardUpdateView(MenuMixin, UpdateView):
+class EditCardUpdateView(MenuMixin, LoginRequiredMixin, UpdateView):
     model = Card  # Указываем модель, с которой работает представление
     form_class = CardForm  # Указываем класс формы для редактирования карточки
     template_name = 'cards/add_card.html'  # Указываем шаблон, который будет использоваться для отображения формы

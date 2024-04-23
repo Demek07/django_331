@@ -714,3 +714,10 @@ max_tags_card = Card.objects.aggregate(max_tags=Max('tags'))
 - Добавили оформления в шаблон `login.html`
 
 **commit: `lesson_63: своя форма входа и выхода из системы`**
+
+- Поэкспериментировали с `LoginRequiredMixin` и порядком его указания в классе представления
+- `MenuMixin` никак не влияет на работу `LoginRequiredMixin`
+- Прописал в настройках `LOGIN_URL` для того, чтбы не делать это в каждом защищенном представлении
+- Убрал `login_url` из 2 защищенных представлений и проверил работу
+
+**commit: `lesson_63: LoginRequiredMixin и LOGIN_URL`**

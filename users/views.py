@@ -2,14 +2,14 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, reverse
 from django.contrib.auth import logout
-from .forms import LoginUserForm, CustomAuthenticationForm
+from .forms import CustomAuthenticationForm
 from django.urls import reverse_lazy
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
+from cards.views import MenuMixin
 
-
-class LoginUser(LoginView):
+class LoginUser(MenuMixin, LoginView):
     form_class = CustomAuthenticationForm
     template_name = 'users/login.html'
     extra_context = {'title': 'Авторизация'}
