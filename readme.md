@@ -685,5 +685,25 @@ max_tags_card = Card.objects.aggregate(max_tags=Max('tags'))
 `<input type="hidden" name="next" value="{{ request.GET.next }}">`
 - Пофиксили редирект при успешной авторизации `return redirect(request.POST.get('next', 'catalog'))`
 Это позволяет переходить на страницу, с которой пришел пользователь после авторизации
-
+- Поработали с меню, теперь там отображается имя пользователя и ссылка на выход из системы
+- 
 **commit: `lesson_62: защита представлений от неавторизованных пользователей и перенаправление`**
+
+## Lesson 63
+
+#BUG: Нашли косяк с кешированием представления по тегам (отображается только кеш первого тега)
+#TODO: Добавить оптимизация шаблонов каталога
+- base_catalog.html
+- include/card_preview.html
+- card_detail.html
+- catalog.html
+- profile_cards.html ?
+- cards_by_tag.html (наследуется от base_catalog.html)
+- cards_by_category.html (наследуется от base_catalog.html)
+
+### Переписали функцию логина на LoginUser(LoginView)
+- Использовали `LoginView` вместо функции `login_user` - это классовое представление для входа в систему
+- В нем использовали служебную форму `AuthenticationForm` для входа в систему
+- А так же прописали `success_url` для перехода после успешного входа с проверкой на `next`
+
+**commit: `lesson_63: переписал функцию логина на LoginUser(LoginView)`**
