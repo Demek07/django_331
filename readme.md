@@ -734,5 +734,11 @@ max_tags_card = Card.objects.aggregate(max_tags=Max('tags'))
 
 **commit: `lesson_63: LogoutUser(LogoutView)`**
 
+- Регистрация пользователя через простую форму связанную с моделью `RegisterUserForm(forms.ModelForm):`
+- Функция представления `register_user` для регистрации пользователя
+- Шаблон `register.html` для регистрации пользователя
+- Сообщение спасибо за регистрацию `register_done.html`
 
+
+**commit: `lesson_63: регистрация пользователя`**
 
