@@ -5,7 +5,7 @@ from django.contrib.auth import logout
 from .forms import CustomAuthenticationForm
 from django.urls import reverse_lazy
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import reverse_lazy
 from cards.views import MenuMixin
 
@@ -20,14 +20,9 @@ class LoginUser(MenuMixin, LoginView):
             return self.request.POST.get('next')
         return reverse_lazy('catalog')
 
+class LogoutUser(LogoutView):
+    next_page = reverse_lazy('users:login')
 
-
-
-def logout_user(request):
-    # Вызов функции logout для завершения сессии пользователя
-    logout(request)
-    # Перенаправление на страницу входа, используя reverse для получения URL по имени
-    return redirect(reverse('users:login'))
 
 
 def signup_user(request):

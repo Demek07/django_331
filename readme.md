@@ -728,3 +728,11 @@ max_tags_card = Card.objects.aggregate(max_tags=Max('tags'))
 - Модифицировали view для добавления карточки, чтобы автором был текущий пользователь
 
 **commit: `lesson_63: добавил пользователя в описание карточки`**
+
+- `class LogoutUser(LogoutView): next_page = reverse_lazy('users:login')`
+- Поправили `urls.py` для приложения `users` c использованием класса `LogoutUser`
+
+**commit: `lesson_63: LogoutUser(LogoutView)`**
+
+
+
