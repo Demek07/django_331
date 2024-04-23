@@ -18,10 +18,12 @@
             <span class="badge bg-secondary"><a href="{% url 'get_cards_by_tag' tag_id=tag.pk %}" class="text-white">{{ tag.name }}</a></span>
           {% endfor %}
         </p>
+        <p class="card-text"><small class="text-muted">Автор: {{ card.author.username|default:"неизвестен" }}</small></p>
         <!-- Горизонтальное выравнивание для элементов даты, просмотров, добавлений и кнопки -->
 
         <div class="d-flex justify-content-between align-items-center mt-2">
           <small class="text-muted d-none d-sm-block">Дата загрузки: {{ card.upload_date }}</small>
+          
           <div class="ms-auto"> <!-- Добавлен класс ms-auto для сдвига вправо -->
             <i class="bi bi-eye"></i> {{ card.views }}
             <i class="bi bi-star-fill"></i> {{ card.favorites }}

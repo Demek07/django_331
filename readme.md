@@ -721,3 +721,10 @@ max_tags_card = Card.objects.aggregate(max_tags=Max('tags'))
 - Убрал `login_url` из 2 защищенных представлений и проверил работу
 
 **commit: `lesson_63: LoginRequiredMixin и LOGIN_URL`**
+
+### Добавление пользователя в описание карточки
+- `author = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, related_name='cards', null=True, default=None, verbose_name=_('Автор'))`
+- Добавили пользователя в шаблоны отображения карточек
+- Модифицировали view для добавления карточки, чтобы автором был текущий пользователь
+
+**commit: `lesson_63: добавил пользователя в описание карточки`**
