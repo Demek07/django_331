@@ -707,3 +707,10 @@ max_tags_card = Card.objects.aggregate(max_tags=Max('tags'))
 - А так же прописали `success_url` для перехода после успешного входа с проверкой на `next`
 
 **commit: `lesson_63: переписал функцию логина на LoginUser(LoginView)`**
+
+
+- Написали свою форму с наследованием от `AuthenticationForm` и добавили в нее BS5 стили
+- Переписали представление выхода из системы на `LogoutUser(LogoutView)`
+- Добавили оформления в шаблон `login.html`
+
+**commit: `lesson_63: своя форма входа и выхода из системы`**
