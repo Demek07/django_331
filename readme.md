@@ -753,3 +753,14 @@ max_tags_card = Card.objects.aggregate(max_tags=Max('tags'))
 
 
 **commit: `lesson_64: класс регистрации пользователя RegisterUser`**
+
+### Авторизация опционально через email или username
+
+- Создаем файл бэкенда аутентификации `users/authentication.py`
+- Определяем в нем собственный бэкенд
+- Подключаем его в настройках `AUTHENTICATION_BACKENDS`
+- Указываем там стандартный бэкенд `django.contrib.auth.backends.ModelBackend` и наш собственный `users.authentication.EmailAuthBackend`
+- Поправили форму входа `LoginUserForm` (подпись что вы можете войти по email или username)
+
+
+**commit: `lesson_64: авторизация опционально через email или username`**
