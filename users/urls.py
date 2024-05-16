@@ -13,5 +13,7 @@ urlpatterns = [
     # Профиль / Изменение пароля / Мои карточки
     path("profile/", views.ProfileUser.as_view(), name='profile'),
     path("password_change/", views.UserPasswordChange.as_view(), name='password_change'),
+    path("passwor_change_done/", views.UserPasswordChangeDone.as_view(), name='password_change_done'),
     path("profile_cards/", views.UserCardsView.as_view(), name='profile_cards'),
+
 ]
