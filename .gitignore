@@ -12,3 +12,4 @@ uploads/Модуль UML.pdf
 users/__pycache__/
 users/images/
 media/
+.env
