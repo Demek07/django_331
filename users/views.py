@@ -42,7 +42,7 @@ class RegisterDoneView(MenuMixin, TemplateView):
     extra_context = {'title': 'Регистрация завершена'}
 
 
-class ProfileUser(LoginRequiredMixin, UpdateView):
+class ProfileUser(MenuMixin, LoginRequiredMixin, UpdateView):
     model = get_user_model()  # Используем модель текущего пользователя
     form_class = ProfileUserForm  # Связываем с формой профиля пользователя
     template_name = 'users/profile.html'  # Указываем путь к шаблону

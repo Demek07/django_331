@@ -5,19 +5,10 @@
 anki/__pycache__/
 cards/__pycache__/
 cards/migrations/__pycache__/
-cards/templatetags/__pycache__/__init__.cpython-312.pyc
-cards/templatetags/__pycache__/markdown_to_html.cpython-312.pyc
+cards/templatetags/__pycache__/
 /lesson_47.db
-cards/templatetags/__pycache__/__init__.cpython-311.pyc
-cards/templatetags/__pycache__/markdown_to_html_2.cpython-311.pyc
-cards/templatetags/__pycache__/markdown_to_html_2.cpython-312.pyc
-cards/templatetags/__pycache__/markdown_to_html.cpython-311.pyc
+cards/templatetags/__pycache__/
 uploads/Модуль UML.pdf
-users/__pycache__/__init__.cpython-311.pyc
-users/__pycache__/admin.cpython-311.pyc
-users/__pycache__/apps.cpython-311.pyc
-users/__pycache__/models.cpython-311.pyc
-users/__pycache__/urls.cpython-311.pyc
-users/__pycache__/views.cpython-311.pyc
-users/__pycache__/forms.cpython-311.pyc
-users/images/2024/05/16/кроль.jpg
+users/__pycache__/
+users/images/
+media/

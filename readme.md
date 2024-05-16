@@ -850,3 +850,42 @@ class User(AbstractUser):
 
 
 **commit: `lesson_65: расширил модель пользователя`**
+
+### Починим фотографии в профиле
+
+- Для этого нужно определить две вещи в настройках:
+- MEDIA_ROOT - корневой каталог для загружаемых файлов
+- MEDIA_URL - URL, по которому можно получить доступ к загружаемым файлам
+
+```python
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+```
+
+- Правки в главный `urls.py` для отображения медиафайлов в режиме отладки
+
+```python
+from django.conf.urls.static import static
+from django.conf import settings
+if settings.DEBUG:
+    import debug_toolbar
+
+    urlpatterns = [
+                      path('__debug__/', include(debug_toolbar.urls)),
+                      # другие URL-паттерны
+                  ] + urlpatterns
+    
+    # Добавляем обработку медиафайлов
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+```
+
+- Правки в `nav_menu.html` для кликабельности username
+
+```html
+ <a class="nav-link" href="{% url 'users:profile' %}">{{ user.username }}</a>
+```
+
+А так же мелкие правки в стили для отображения фотографии пользователя
+
+
+**commit: `lesson_65: починил фотографии в профиле`**

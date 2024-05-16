@@ -6,6 +6,8 @@ from django.urls import path, include
 from django.views.decorators.cache import cache_page
 from anki import settings
 from cards import views
+from django.conf.urls.static import static
+from django.conf import settings
 
 
 # Настраиваем заголовки админ-панели
@@ -35,6 +37,8 @@ if settings.DEBUG:
                       # другие URL-паттерны
                   ] + urlpatterns
     
+    # Добавляем обработку медиафайлов
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # Определяем кастомный обработчик 404 ошибки
 handler404 = views.PageNotFoundView.as_view()
