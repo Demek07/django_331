@@ -19,13 +19,20 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG')
 
-ALLOWED_HOSTS = ['*']
+# ALLOWED_HOSTS - это список хостов, которые могут обращаться к нашему сайту
+ALLOWED_HOSTS = ['pydeck.ru', 'www.pydeck.ru', 'localhost', '127.0.0.1']
 
-INTERNAL_IPS = [
-    '127.0.0.1',
-]
+# CSRF_TRUSTED_ORIGINS - это список доменов, с которых можно отправлять POST-запросы без токена CSRF
+CSRF_TRUSTED_ORIGINS = ['https://pydeck.ru', 'https://www.pydeck.ru']
+
+
+# INTERNAL_IPS  - это список IP-адресов, с которых можно получить доступ к отладочной панели Django
+if DEBUG:    
+    INTERNAL_IPS = [
+        '127.0.0.1',
+    ]
 
 # Application definition
 
