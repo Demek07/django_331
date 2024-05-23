@@ -1276,6 +1276,16 @@ urlpatterns = [
 
 **commit: `lesson_67: обновление маршрутов для авторизации через соцсети`**
 
+### Обновление шаблона login.html
+
+```html
+ <h3>Или зайдите через:</h3>
+            <a href="{% url 'social:begin' 'vk' %}" class="btn btn-dark">ВКонтакте</a>
+            <a href="{% url 'social:begin' 'github' %}" class="btn btn-dark">GitHub</a>
+```
+
+**commit: `lesson_67: обновление шаблона login.html`**
+
 ### Альтернативный вариант: регистрация через соцсети
 17. Обзор преимуществ и недостатков регистрации через соцсети.
 18. Пример реализации регистрации через соцсети с помощью `social-auth-app-django`.
