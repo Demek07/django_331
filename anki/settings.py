@@ -151,7 +151,7 @@ LOGIN_URL = 'users:login'
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',  # Стандартный бекенд для аутентификации по username
     'users.authentication.EmailAuthBackend',      # Наш кастомный бекенд для аутентификации по email
-    'social_auth.backends.contrib.vk.VKOAuth2Backend',
+    'social_core.backends.github.GithubOAuth2',
     'social_core.backends.vk.VKOAuth2',
 
 ]
