@@ -1115,6 +1115,8 @@ if DEBUG:
 ### Подготовка проекта к авторизации через соцсети
 
 1. Устанавливаем библиотеку `social-auth-app-django` и добавляем ее в `requirements.txt`
+https://python-social-auth.readthedocs.io/en/latest/index.html
+
 
 `pip install social-auth-app-django`
 `pip freeze > requirements.txt`
@@ -1157,12 +1159,6 @@ TEMPLATES = [
             ],
         },
     },
-]
-########
-AUTHENTICATION_BACKENDS = [
-    ...
-    'social_core.backends.github.GithubOAuth2',
-    'social_core.backends.vk.VKOAuth2',
 ]
 
 SOCIAL_AUTH_URL_NAMESPACE = 'social'

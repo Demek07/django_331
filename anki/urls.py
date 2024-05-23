@@ -27,6 +27,7 @@ urlpatterns = [
     # Маршруты подключенные из приложения cards
     path('cards/', include('cards.urls')),
     path('users/', include('users.urls', namespace='users')),
+    # Маршруты для авторизации через соцсети
     path('social-auth/', include('social_django.urls', namespace='social')),
 ]
 
