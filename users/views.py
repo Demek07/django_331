@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, reverse
 from django.contrib.auth import logout
+from django.views import View
 from .forms import CustomAuthenticationForm, RegisterUserForm
 from django.urls import reverse_lazy
 from django.contrib.auth.forms import AuthenticationForm
@@ -14,6 +15,8 @@ from django.views.generic.edit import UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import ProfileUserForm, UserPasswordChangeForm
 from cards.models import Card
+from social_django.utils import psa
+
 
 class LoginUser(MenuMixin, LoginView):
     form_class = CustomAuthenticationForm
@@ -79,3 +82,26 @@ class UserCardsView(ListView):
 
     def get_queryset(self):
         return Card.objects.filter(author=self.request.user).order_by('-upload_date')
+    
+
+
+class SocialAuthView(View):
+
+    @psa('social:complete')
+    def save_oauth_data(self, request, backend):
+        user = request.user
+        if backend.name == 'github':
+            user.github_id = backend.get_user_id(request)
+        elif backend.name == 'vk':
+            user.vk_id = backend.get_user_id(request)
+        user.save()
+        return redirect('users:profile')
+
+    def post(self, request, *args, **kwargs):
+        if 'provider' in request.POST:
+            provider = request.POST['provider']
+            if provider == 'github':
+                return redirect('social:begin', backend='github')
+            elif provider == 'vk':
+                return redirect('social:begin', backend='vk')
+        return redirect('users:profile')

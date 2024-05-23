@@ -1110,18 +1110,137 @@ if DEBUG:
 
 1. Введение в OAuth2.0 и его принципы.
 2. Различия между OAuth и OpenID Connect.
-3. Пример работы OAuth2.0 на практике.
+3. Пример работы OAuth2.0 на практике в Django.
 
-### Настройка авторизации через GitHub
-4. Регистрация приложения на GitHub для получения Client ID и Client Secret.
-5. Установка и настройка библиотеки `social-auth-app-django`.
-6. Добавление настроек GitHub в `settings.py`.
-7. Настройка URL для перенаправления после авторизации.
+### Подготовка проекта к авторизации через соцсети
 
-### Настройка авторизации через VK
-8. Регистрация приложения на VK для получения Client ID и Client Secret.
-9. Добавление настроек VK в `settings.py`.
-10. Настройка URL для перенаправления после авторизации.
+1. Устанавливаем библиотеку `social-auth-app-django` и добавляем ее в `requirements.txt`
+
+`pip install social-auth-app-django`
+`pip freeze > requirements.txt`
+
+2. Добавляем приложение `social_django` в `INSTALLED_APPS` в `settings.py`
+
+```python
+INSTALLED_APPS = [
+    ...
+    'social_django',
+]
+```
+
+1. Добавляем настройки `settings.py`
+AUTHENTICATION_BACKENDS - список бэкендов аутентификации, для работы с соцсетями
+MIDDLEWARE - список промежуточных слоев, для обработки исключений
+TEMPLATES - список контекстных процессоров, для передачи данных в шаблоны
+SOCIAL_AUTH_URL_NAMESPACE - пространство имен для URL-адресов авторизации
+
+```python
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.github.GithubOAuth2',
+    'social_core.backends.vk.VKOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
+########
+MIDDLEWARE = [
+    ...
+    'social_django.middleware.SocialAuthExceptionMiddleware',
+]
+########
+TEMPLATES = [
+    {
+        ...
+        'OPTIONS': {
+            'context_processors': [
+                ...
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
+            ],
+        },
+    },
+]
+########
+AUTHENTICATION_BACKENDS = [
+    ...
+    'social_core.backends.github.GithubOAuth2',
+    'social_core.backends.vk.VKOAuth2',
+]
+
+SOCIAL_AUTH_URL_NAMESPACE = 'social'
+```
+
+2. Добавляем в `.env` и `env.example` переменные для авторизации через GitHub и VK
+
+GITHUB_KEY=None
+GITHUB_SECRET=None
+VK_KEY=None
+VK_SECRET=None
+
+3. Настройки в `settings.py` для авторизации через GitHub и VK
+
+```python
+SOCIAL_AUTH_URL_NAMESPACE = 'social'
+SOCIAL_AUTH_GITHUB_KEY = os.getenv('GITHUB_KEY')
+SOCIAL_AUTH_GITHUB_SECRET = os.getenv('GITHUB_SECRET')
+
+SOCIAL_AUTH_VK_OAUTH2_KEY = os.getenv('VK_KEY')
+SOCIAL_AUTH_VK_OAUTH2_SECRET = os.getenv('VK_SECRET')
+
+LOGIN_REDIRECT_URL = '/users/profile/'
+LOGOUT_REDIRECT_URL = '/'
+```
+
+4. Добавляем URL-адреса для авторизации через соцсети в `urls.py`
+
+```python
+from django.urls import include, path
+
+urlpatterns = [
+    ...
+    path('social-auth/', include('social_django.urls', namespace='social')),
+]
+```
+5. Добавляем в шаблон `profile.html` кнопки для авторизации через GitHub и VK
+
+```html
+<form method="post" action="{% url 'users:link_social_account' %}">
+  {% csrf_token %}
+  <button type="submit" name="provider" value="github" class="btn btn-dark">Привязать GitHub</button>
+  <button type="submit" name="provider" value="vk" class="btn btn-dark">Привязать VK</button>
+</form>
+```
+
+6. Создаем представление для привязки соцсетей к пользователю в `views.py` приложения `users`
+
+```python
+from django.views import View
+from django.shortcuts import redirect
+from social_django.utils import psa
+
+class SocialAuthView(View):
+
+    @psa('social:complete')
+    def save_oauth_data(self, request, backend):
+        user = request.user
+        if backend.name == 'github':
+            user.github_id = backend.get_user_id(request)
+        elif backend.name == 'vk':
+            user.vk_id = backend.get_user_id(request)
+        user.save()
+        return redirect('users:profile')
+
+    def post(self, request, *args, **kwargs):
+        if 'provider' in request.POST:
+            provider = request.POST['provider']
+            if provider == 'github':
+                return redirect('social:begin', backend='github')
+            elif provider == 'vk':
+                return redirect('social:begin', backend='vk')
+        return redirect('users:profile')
+
+```
+
+**commit: `lesson_67: подготовка проекта к авторизации через соцсети`**
+
 
 ### Обновление моделей и представлений
 11. Добавление полей для хранения данных соцсетей в модель пользователя.
