@@ -49,4 +49,8 @@ urlpatterns = [
         ),name="password_reset_complete",
     ),
 
+    # Маршруты автризации через соцсети
+    path('link-social-account/', views.SocialAuthView.as_view(), name='link_social_account'),
+    path('save-oauth-data/<str:backend>/', views.SocialAuthView.as_view(), name='save_oauth_data'),
+
 ]
