@@ -156,7 +156,7 @@ AUTHENTICATION_BACKENDS = [
 
 ]
 
-SOCIAL_AUTH_AUTHENTICATION_BACKENDS = 'social_core.backends.vk.VKOAuth2'
+SOCIAL_AUTH_AUTHENTICATION_BACKENDS = ['social_core.backends.vk.VKOAuth2']
 
 AUTH_USER_MODEL = 'users.User'
 
