@@ -39,7 +39,8 @@ from django.contrib.auth import get_user_model
 from django.core.cache import cache
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+
 
 info = {
     # "menu": ['Главная', 'О проекте', 'Каталог']
@@ -240,12 +241,14 @@ class AddCardCreateView(MenuMixin, LoginRequiredMixin,  CreateView):
 
 
 
-class EditCardUpdateView(MenuMixin, LoginRequiredMixin, UpdateView):
+class EditCardUpdateView(MenuMixin, LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Card  # Указываем модель, с которой работает представление
     form_class = CardForm  # Указываем класс формы для редактирования карточки
     template_name = 'cards/add_card.html'  # Указываем шаблон, который будет использоваться для отображения формы
     context_object_name = 'card'  # Имя переменной контекста для карточки
     success_url = reverse_lazy('catalog')  # URL для перенаправления после успешного редактирования карточки
+    permission_required = 'cards.change_card'  # Указываем право, которое должен иметь пользователь для доступа к представлению
+
 
 
 class CardDeleteView(DeleteView):
