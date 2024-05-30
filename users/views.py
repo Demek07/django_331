@@ -57,6 +57,12 @@ class ProfileUser(MenuMixin, LoginRequiredMixin, UpdateView):
 
     def get_object(self, queryset=None):
         # Возвращает объект модели, который должен быть отредактирован
+        # Проверят входит ли пользователь в группу "Модераторы",если да то user.moderator = True
+        # Это самая убогая версия, но она работает))
+        # Более качественный вариант - контекстный процессор! Он поместит эту проверку во все шаблоны
+        user = self.request.user
+        if user.groups.filter(name='Модераторы').exists():
+            user.moderator = True
         return self.request.user
 
 
