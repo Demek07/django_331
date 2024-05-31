@@ -24,7 +24,9 @@
         <div class="d-flex justify-content-between align-items-center mt-2">
           <small class="text-muted d-none d-sm-block">Дата загрузки: {{ card.upload_date }}</small>
           {% comment %} <a href="{% url 'edit_card' card.pk %}" class="btn btn-dark ms-3"><i class="bi bi-pencil-fill"></i></a> {% endcomment %}
-          {% if user.is_authenticated and perms.cards.change_card %}
+          {% comment %} {% if user.is_authenticated and perms.cards.change_card %} {% endcomment %}
+          {% comment %} Делаем новый вариант. Если пользователь авторизован И у него есть права на редактирование ИЛИ пользователь - автор карточки {% endcomment %}
+{% if perms.cards.change_card or user == card.author %}
     <a href="{% url 'edit_card' card.pk %}" class="btn btn-dark ms-3"><i class="bi bi-pencil-fill"></i></a>
 {% endif %}
           <div class="ms-auto"> <!-- Добавлен класс ms-auto для сдвига вправо -->
