@@ -9,5 +9,7 @@
         <a class="nav-link {% if active_tab == 'profile' %}active bg-dark text-light{% else %}text-dark{% endif %}" href="{% url 'users:profile' %}">Профиль</a>
         <a class="nav-link {% if active_tab == 'password_change' %}active bg-dark text-light{% else %}text-dark{% endif %}" href="{% url 'users:password_change' %}">Сменить пароль</a>
         <a class="nav-link {% if active_tab == 'profile_cards' %}active bg-dark text-light{% else %}text-dark{% endif %}" href="{% url 'users:profile_cards' %}">Мои карточки</a>
+        {% comment %} profile_favorites - для отображения избранного {% endcomment %}
+        <a class="nav-link {% if active_tab == 'profile_favorites' %}active bg-dark text-light{% else %}text-dark{% endif %}" href="{% url 'users:profile_favorites' %}">Избранное</a>
     </nav>
 </nav>

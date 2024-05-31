@@ -14,6 +14,7 @@ class Card(models.Model):
     upload_date = models.DateTimeField(auto_now_add=True, db_column='UploadDate', verbose_name='Дата загрузки')
     views = models.IntegerField(default=0, db_column='Views', verbose_name='Просмотры')
     adds = models.IntegerField(default=0, db_column='Favorites', verbose_name='В избранном')
+    favorites = models.ManyToManyField(get_user_model(), related_name='favorite_cards', blank=True, verbose_name='Избранное')
     tags = models.ManyToManyField('Tag', through='CardTag', related_name='cards', verbose_name='Теги')
     status = models.BooleanField(default=False, choices=tuple(map(lambda x: (bool(x[0]), x[1]), Status.choices)), verbose_name='Проверено')
     author = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, related_name='cards', null=True, default=None, verbose_name='Автор')

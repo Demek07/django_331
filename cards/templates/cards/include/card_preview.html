@@ -29,9 +29,18 @@
 {% if perms.cards.change_card or user == card.author %}
     <a href="{% url 'edit_card' card.pk %}" class="btn btn-dark ms-3"><i class="bi bi-pencil-fill"></i></a>
 {% endif %}
+{% comment %} Если текущий пользователь есть в списке связанных пользователей с карточкой, то отобразим иконку минуса, иначе плюса {% endcomment %}
+
+{% if user in card.favorites.all %}
+<i class="bi bi-patch-minus-fill"></i>
+{% else %}
+<i class="bi bi-patch-plus"></i>
+{% endif %}
+
+
           <div class="ms-auto"> <!-- Добавлен класс ms-auto для сдвига вправо -->
-            <i class="bi bi-eye"></i> {{ card.views }}
-            <i class="bi bi-star-fill"></i> {{ card.favorites }}
+            <i class="bi bi-eye">d</i> {{ card.views }}
+            <i class="bi bi-star-fill">d</i> {{ card.adds }}
           </div>
 
         <!--    ТУТ 2 КНОПКИ. 1 видно на компьютерах, другую на телефонах.    -->

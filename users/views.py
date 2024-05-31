@@ -66,7 +66,7 @@ class ProfileUser(MenuMixin, LoginRequiredMixin, UpdateView):
         return self.request.user
 
 
-class UserPasswordChange(PasswordChangeView):
+class UserPasswordChange(MenuMixin, PasswordChangeView):
     form_class = UserPasswordChangeForm
     template_name = 'users/password_change_form.html'
     extra_context = {'title': 'Изменение пароля',
@@ -74,12 +74,12 @@ class UserPasswordChange(PasswordChangeView):
     success_url = reverse_lazy('users:password_change_done')
 
 
-class UserPasswordChangeDone(TemplateView):
+class UserPasswordChangeDone(MenuMixin, TemplateView):
     template_name = 'users/password_change_done.html'
     extra_context = {'title': 'Пароль изменен успешно'}
 
 
-class UserCardsView(ListView):
+class UserCardsView(MenuMixin, ListView):
     model = Card
     template_name = 'users/profile_cards.html'
     context_object_name = 'cards'
@@ -88,8 +88,17 @@ class UserCardsView(ListView):
 
     def get_queryset(self):
         return Card.objects.filter(author=self.request.user).order_by('-upload_date')
-    
 
+
+class UserFavoritesView(MenuMixin, ListView):
+    model = Card
+    template_name = 'users/profile_cards.html'
+    context_object_name = 'cards'
+    extra_context = {'title': 'Избранные карточки',
+                     'active_tab': 'profile_favorites'}
+    
+    def get_queryset(self):
+        return self.request.user.favorite_cards.all().order_by('-upload_date')
 
 class SocialAuthView(View):
 

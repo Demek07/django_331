@@ -14,11 +14,12 @@ urlpatterns = [
     path('signup/', views.RegisterUser.as_view(), name='signup'),
     # Сообщение об успешной регистрации
     path('register_done/', views.RegisterDoneView.as_view(), name='register_done'),
-    # Профиль / Изменение пароля / Мои карточки
+    # Профиль / Изменение пароля / Мои карточки / Избранное
     path("profile/", views.ProfileUser.as_view(), name='profile'),
     path("password_change/", views.UserPasswordChange.as_view(), name='password_change'),
     path("passwor_change_done/", views.UserPasswordChangeDone.as_view(), name='password_change_done'),
     path("profile_cards/", views.UserCardsView.as_view(), name='profile_cards'),
+    path("profile_favorites/", views.UserFavoritesView.as_view(), name='profile_favorites'),
     # Профиль / Восстановление пароля
     #########
 
